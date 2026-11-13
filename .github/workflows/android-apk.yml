@@ -1,0 +1,128 @@
+name: Studio Mobile - Android APK and Luau VM
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: studio-mobile-android-\${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  luau-vm-smoke:
+    name: Build official Luau and test Roblox preview API
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install build tools
+        run: sudo apt-get update && sudo apt-get install -y cmake ninja-build build-essential
+      - name: Fetch pinned Luau source
+        run: git clone --depth 1 --branch 0.740 https://github.com/luau-lang/luau.git build/luau-src
+      - name: Build Luau CLI
+        run: |
+          cmake -S build/luau-src -B build/luau-linux -G Ninja \\
+            -DCMAKE_BUILD_TYPE=Release \\
+            -DLUAU_BUILD_CLI=ON \\
+            -DLUAU_BUILD_TESTS=OFF \\
+            -DLUAU_BUILD_WEB=OFF
+          cmake --build build/luau-linux --target Luau.Repl.CLI --parallel 2
+      - name: Run Roblox compatibility smoke test in official Luau VM
+        run: |
+          cat app/src/main/assets/roblox_compat.luau tests/roblox_compat_smoke.luau > build/compat-smoke.luau
+          build/luau-linux/luau build/compat-smoke.luau | tee build/luau-smoke.log
+          grep -q ROBLOX_COMPAT_SMOKE_OK build/luau-smoke.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: StudioMobile-Luau-VM-Smoke
+          path: build/luau-smoke.log
+          if-no-files-found: ignore
+          retention-days: 14
+
+  android-apk:
+    name: Build and verify Android ARM64 APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v6
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v4
+      - name: Install SDK, NDK and CMake
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager \\
+            'platform-tools' \\
+            'platforms;android-36' \\
+            'build-tools;36.0.0' \\
+            'ndk;28.2.13676358' \\
+            'cmake;3.22.1'
+      - name: Install Gradle 9.6.0
+        uses: gradle/actions/setup-gradle@v6
+        with:
+          gradle-version: '9.6.0'
+      - name: Check project structure and Android manifest
+        run: |
+          test -f app/src/main/assets/index.html
+          test -f app/src/main/assets/roblox_compat.luau
+          test -f app/src/main/cpp/native_luau.cpp
+          test -f app/src/main/java/com/studiomobile/app/MainActivity.java
+          python3 - <<'PY'
+          import xml.etree.ElementTree as ET
+          ET.parse('app/src/main/AndroidManifest.xml')
+          print('Android manifest XML: OK')
+          PY
+      - name: Try full APK build with Luau 0.740 native runtime
+        id: native
+        continue-on-error: true
+        run: gradle --no-daemon --stacktrace --console=plain :app:assembleDebug
+      - name: Build editor-only fallback APK
+        if: steps.native.outcome != 'success'
+        run: |
+          echo 'Native build failed; creating editor-only fallback APK.'
+          gradle --stop || true
+          gradle --no-daemon --stacktrace --console=plain -PdisableNativeLuau=true clean :app:assembleDebug
+      - name: Verify APK signature, package id and ABI
+        run: |
+          set -euo pipefail
+          APK='app/build/outputs/apk/debug/app-debug.apk'
+          test -s "$APK"
+          "$ANDROID_SDK_ROOT/build-tools/36.0.0/apksigner" verify --verbose --print-certs "$APK"
+          "$ANDROID_SDK_ROOT/build-tools/36.0.0/aapt" dump badging "$APK" | tee apk-badging.txt
+          grep -q "package: name='com.studiomobile.app'" apk-badging.txt
+          if unzip -l "$APK" | grep -q 'lib/arm64-v8a/libstudiomobile.so'; then
+            echo 'Luau native runtime: INCLUDED (arm64-v8a)' | tee APK_BUILD_MODE.txt
+            unzip -l "$APK" | grep 'lib/arm64-v8a/libstudiomobile.so'
+          else
+            echo 'Luau native runtime: NOT INCLUDED (editor-only fallback)' | tee APK_BUILD_MODE.txt
+          fi
+          sha256sum "$APK" | tee APK_SHA256.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: StudioMobile-Android-ARM64-APK
+          path: |
+            app/build/outputs/apk/debug/app-debug.apk
+            APK_BUILD_MODE.txt
+            APK_SHA256.txt
+            apk-badging.txt
+          if-no-files-found: error
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: StudioMobile-Android-Build-Diagnostics
+          path: |
+            app/build/reports/
+            app/.cxx/
+          if-no-files-found: ignore
+          retention-days: 14
