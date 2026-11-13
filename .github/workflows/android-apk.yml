@@ -25,11 +25,7 @@ jobs:
         run: git clone --depth 1 --branch 0.740 https://github.com/luau-lang/luau.git build/luau-src
       - name: Build Luau CLI
         run: |
-          cmake -S build/luau-src -B build/luau-linux -G Ninja \\
-            -DCMAKE_BUILD_TYPE=Release \\
-            -DLUAU_BUILD_CLI=ON \\
-            -DLUAU_BUILD_TESTS=OFF \\
-            -DLUAU_BUILD_WEB=OFF
+          cmake -S build/luau-src -B build/luau-linux -G Ninja -DCMAKE_BUILD_TYPE=Release -DLUAU_BUILD_CLI=ON -DLUAU_BUILD_TESTS=OFF -DLUAU_BUILD_WEB=OFF
           cmake --build build/luau-linux --target Luau.Repl.CLI --parallel 2
       - name: Run Roblox compatibility smoke test in official Luau VM
         run: |
@@ -61,12 +57,7 @@ jobs:
       - name: Install SDK, NDK and CMake
         run: |
           yes | sdkmanager --licenses >/dev/null || true
-          sdkmanager \\
-            'platform-tools' \\
-            'platforms;android-36' \\
-            'build-tools;36.0.0' \\
-            'ndk;28.2.13676358' \\
-            'cmake;3.22.1'
+          sdkmanager 'platform-tools' 'platforms;android-36' 'build-tools;36.0.0' 'ndk;28.2.13676358' 'cmake;3.22.1'
       - name: Install Gradle 9.6.0
         uses: gradle/actions/setup-gradle@v6
         with:
