@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: studio-mobile-android-\${{ github.ref }}
+  group: studio-mobile-android-main
   cancel-in-progress: true
 
 jobs:
