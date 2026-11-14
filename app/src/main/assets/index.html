@@ -191,7 +191,9 @@ function initViewport(){
   gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(cubeNormals),gl.STATIC_DRAW);
   const dynamicPositionBuffer=gl.createBuffer();
   const dynamicColorBuffer=gl.createBuffer();
-  glState={gl,program,cubeVertices:new Float32Array(cubeVertices),gridPositionBuffer,gridNormalBuffer,cubeNormalBuffer,dynamicPositionBuffer,dynamicColorBuffer,gridVertexCount:gridVertices.length/3,cubeNormalData:new Float32Array(cubeNormals),aPos:gl.getAttribLocation(program,'aPos'),aNormal:gl.getAttribLocation(program,'aNormal'),aColor:gl.getAttribLocation(program,'aColor'),uMVP:gl.getUniformLocation(program,'uMVP')};
+  const selectionBuffer=gl.createBuffer();
+  const gizmoBuffer=gl.createBuffer();
+  glState={gl,program,cubeVertices:new Float32Array(cubeVertices),gridPositionBuffer,gridNormalBuffer,cubeNormalBuffer,dynamicPositionBuffer,dynamicColorBuffer,selectionBuffer,gizmoBuffer,gridVertexCount:gridVertices.length/3,cubeNormalData:new Float32Array(cubeNormals),aPos:gl.getAttribLocation(program,'aPos'),aNormal:gl.getAttribLocation(program,'aNormal'),aColor:gl.getAttribLocation(program,'aColor'),uMVP:gl.getUniformLocation(program,'uMVP')};
   if(!viewportInputsBound){
    const activePointers=new Map();let pinchDistance=0;
    canvas.addEventListener('pointerdown',event=>{
@@ -291,6 +293,31 @@ function renderViewportFrame(){
   gl.bindBuffer(gl.ARRAY_BUFFER,state.dynamicColorBuffer);gl.bufferData(gl.ARRAY_BUFFER,colors,gl.DYNAMIC_DRAW);
   gl.enableVertexAttribArray(state.aColor);gl.vertexAttribPointer(state.aColor,4,gl.FLOAT,false,0,0);
   gl.drawArrays(gl.TRIANGLES,0,nodes.length*verticesPerPart);
+ }
+ // Selection outline and transform gizmo (XYZ) for the active object.
+ const selectedNode=selected();
+ if(selectedNode&&selectedNode.position&&renderableClasses.has(selectedNode.className)){
+  const pos=selectedNode.position,size=selectedNode.size||{x:4,y:1,z:2},rot=selectedNode.rotation||{x:0,y:0,z:0};
+  const rx=(Number(rot.x)||0)*Math.PI/180,ry=(Number(rot.y)||0)*Math.PI/180,rz=(Number(rot.z)||0)*Math.PI/180;
+  const cx=Math.cos(rx),sx=Math.sin(rx),cy=Math.cos(ry),sy=Math.sin(ry),cz=Math.cos(rz),sz=Math.sin(rz);
+  const half=[Math.max(.01,Number(size.x)||1)*.5,Math.max(.01,Number(size.y)||1)*.5,Math.max(.01,Number(size.z)||1)*.5];
+  const point=(x,y,z)=>{let tx=x*cy-z*sy,tz=x*sy+z*cy,ty=y*cx-tz*sx;tz=y*sx+tz*cx;x=tx;y=ty;tx=x*cz-y*sz;ty=x*sz+y*cz;return [Number(pos.x||0)+tx,Number(pos.y||0)+ty,Number(pos.z||0)+tz];};
+  const corners=[];for(let mask=0;mask<8;mask++)corners.push(point((mask&1?1:-1)*half[0],(mask&2?1:-1)*half[1],(mask&4?1:-1)*half[2]));
+  const edges=[[0,1],[0,2],[0,4],[1,3],[1,5],[2,3],[2,6],[3,7],[4,5],[4,6],[5,7],[6,7]],outline=[];
+  for(const [a,b] of edges)outline.push(...corners[a],...corners[b]);
+  gl.bindBuffer(gl.ARRAY_BUFFER,state.selectionBuffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(outline),gl.DYNAMIC_DRAW);
+  gl.enableVertexAttribArray(state.aPos);gl.vertexAttribPointer(state.aPos,3,gl.FLOAT,false,0,0);
+  gl.disableVertexAttribArray(state.aNormal);gl.vertexAttrib3f(state.aNormal,0,1,0);
+  gl.disableVertexAttribArray(state.aColor);gl.vertexAttrib4f(state.aColor,1.0,.68,.22,1.0);
+  gl.drawArrays(gl.LINES,0,outline.length/3);
+  if(activeTool!=='select'){
+   const center=[Number(pos.x||0),Number(pos.y||0),Number(pos.z||0)],length=Math.max(2,Math.max(...half)*1.8);
+   const gizmo=[...center,center[0]+length,center[1],center[2],...center,center[0],center[1]+length,center[2],...center,center[0],center[1],center[2]+length];
+   gl.bindBuffer(gl.ARRAY_BUFFER,state.gizmoBuffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(gizmo),gl.DYNAMIC_DRAW);gl.vertexAttribPointer(state.aPos,3,gl.FLOAT,false,0,0);
+   gl.vertexAttrib4f(state.aColor,1,.28,.28,1);gl.drawArrays(gl.LINES,0,2);
+   gl.vertexAttrib4f(state.aColor,.32,.92,.50,1);gl.drawArrays(gl.LINES,2,2);
+   gl.vertexAttrib4f(state.aColor,.28,.62,1,1);gl.drawArrays(gl.LINES,4,2);
+  }
  }
  const suffix=allParts.length>renderLimit?` · showing ${renderLimit}/${allParts.length}`:'';
  $('viewportHud').textContent=`3D Viewport · ${nodes.length} Parts${suffix} · ${camera.distance.toFixed(1)} studs`;
