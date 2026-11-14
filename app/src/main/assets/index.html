@@ -1,37 +1,389 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><meta name="theme-color" content="#111720"><title>Studio Mobile</title>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#11151d">
+<title>Studio Mobile — محرر مشاريع ثلاثية الأبعاد</title>
 <style>
-:root{color-scheme:dark;--bg:#0d1118;--panel:#151d29;--line:#283548;--muted:#8da0b7;--text:#edf4ff;--cyan:#66d9ef}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px system-ui,sans-serif;overflow:hidden}header{height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;background:#111a27;border-bottom:1px solid var(--line)}.brand{font-weight:800}.brand span{color:var(--cyan)}button{border:1px solid var(--line);border-radius:8px;background:#1c2a3c;color:var(--text);padding:9px 12px;font-weight:600}button.primary{background:#176f91}main{height:calc(100dvh - 48px);display:grid;grid-template-columns:210px 1fr;grid-template-rows:minmax(180px,1fr) 230px;gap:8px;padding:8px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden;min-height:0}.panel-title{padding:9px 11px;border-bottom:1px solid var(--line);font-weight:700;display:flex;justify-content:space-between}#explorer{grid-row:1/3;display:flex;flex-direction:column}#tree{overflow:auto;padding:6px}.treeitem{padding:8px;border-radius:6px;display:flex;gap:7px;cursor:pointer}.treeitem.active{background:#24415a}.treeitem small,.muted{color:var(--muted);font-size:11px}#scene{display:flex;flex-direction:column;position:relative}#view{width:100%;height:100%;min-height:160px;display:block;touch-action:none;background:#131e2c}.hud{position:absolute;left:10px;top:52px;color:#b6c8dc;background:#0b111bcc;padding:6px;border-radius:6px;font-size:11px;pointer-events:none}#bottom{display:flex;flex-direction:column}#tabs{display:flex;gap:6px;padding:7px;border-bottom:1px solid var(--line)}.tab.active{background:#176f91}#properties,#scriptpane{padding:9px;overflow:auto;flex:1}.rowfield{display:grid;grid-template-columns:100px 1fr;align-items:center;gap:8px;margin:7px 0;color:var(--muted)}input,textarea{width:100%;background:#0d1520;border:1px solid #34465d;color:var(--text);border-radius:6px;padding:8px;font:13px ui-monospace,monospace}textarea{height:100%;min-height:110px;resize:vertical}#scriptpane{display:none;flex-direction:column;gap:8px}#output{white-space:pre-wrap;background:#0a1018;padding:8px;border-radius:6px;min-height:42px;max-height:80px;overflow:auto;color:#9fd6b2;font:12px ui-monospace,monospace}.toolbar{display:flex;gap:6px;padding:7px}@media(max-width:700px){main{grid-template-columns:116px 1fr;grid-template-rows:minmax(200px,1fr) 260px;gap:6px;padding:6px}.panel-title{font-size:12px;padding:8px}.treeitem{font-size:12px;padding:8px 4px}.rowfield{grid-template-columns:72px 1fr;font-size:12px}button{padding:8px 9px}}
-</style></head><body>
-<header><div class="brand">STUDIO <span>MOBILE</span></div><div style="display:flex;gap:6px"><button onclick="newPart()">＋ Part</button><button onclick="exportProject()">Save</button></div></header>
-<main><section id="explorer" class="panel"><div class="panel-title">Explorer <span class="muted" id="count">1 item</span></div><div id="tree"></div><div class="toolbar"><button onclick="newPart()">＋</button><button onclick="deleteSelected()">Delete</button></div></section>
-<section id="scene" class="panel"><div class="panel-title">Workspace <span class="muted" id="engineState">Starting renderer…</span></div><canvas id="view"></canvas><div class="hud">Drag to orbit · Pinch/wheel to zoom · Select in Explorer</div></section>
-<section id="bottom" class="panel"><div id="tabs"><button class="tab active" data-tab="properties">Properties</button><button class="tab" data-tab="scriptpane">Script</button><span style="flex:1"></span><button onclick="document.getElementById('openFile').click()">Import</button><input hidden id="openFile" type="file" onchange="importProject(event)"></div>
-<div id="properties"><div class="rowfield"><span>Name</span><input id="pName" onchange="setProp('Name',this.value)"></div><div class="rowfield"><span>Position</span><input id="pPos" onchange="setVector('Position',this.value)"></div><div class="rowfield"><span>Size</span><input id="pSize" onchange="setVector('Size',this.value)"></div><div class="rowfield"><span>Color</span><input id="pColor" type="color" onchange="setProp('Color',this.value)"></div><div class="rowfield"><span>Anchored</span><input id="pAnchored" type="checkbox" style="width:22px" onchange="setProp('Anchored',this.checked)"></div><div class="muted" id="className">No selection</div></div>
-<div id="scriptpane"><textarea id="code">print("Hello from Studio Mobile!")
-local part = Instance.new("Part")
-part.Name = "CreatedByScript"
-part.Position = Vector3.new(0, 3, 0)
-part.Parent = workspace
-print(part:GetFullName())</textarea><div style="display:flex;gap:7px"><button class="primary" onclick="runScript()">▶ Run Luau</button><span class="muted" id="runtimeLabel">Checking runtime…</span></div><div id="output">Ready.</div></div></section></main>
+:root{--bg:#17191e;--chrome:#202329;--chrome2:#282c34;--panel:#1e2229;--panel2:#252a33;--line:#343a45;--text:#e8ebf0;--muted:#a0a7b3;--blue:#0877d1;--blue2:#2995ef;--cyan:#61c8e8;--green:#62d49a;--orange:#f3b64c;--red:#e87979;--shadow:0 12px 34px #0008;--ribbon:#252930}
+*{box-sizing:border-box}html,body{height:100%;margin:0;background:var(--bg);color:var(--text);font:13px/1.35 "Segoe UI",Roboto,system-ui,sans-serif;overflow:hidden}button,input,textarea,select{font:inherit}button{cursor:pointer;color:inherit;border:1px solid #414853;background:#303640;border-radius:4px;padding:6px 9px;min-height:30px}button:hover{background:#3b424d;border-color:#5b6675}button:active{transform:translateY(1px)}button.primary{background:#0877d1;border-color:#1689e6;color:white}button.active{background:#174d77;border-color:#2d9be8;color:#fff}button.danger{color:#ffb0b0}.hidden{display:none!important}.muted{color:var(--muted)}.spacer{flex:1;min-width:8px}
+.app{height:100dvh;display:flex;flex-direction:column;min-width:0;background:var(--bg)}
+/* Studio-like title bar and menu strip */
+.top{height:36px;min-height:36px;display:flex;align-items:center;gap:9px;padding:0 10px;background:#171a20;border-bottom:1px solid #0d0f13;direction:ltr}.brand{font-weight:800;letter-spacing:.5px;font-size:12px;white-space:nowrap}.brand b{color:#fff;background:#0877d1;border-radius:4px;padding:3px 5px;margin-right:4px}.project-name{font-size:12px;color:#c7cbd2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:230px}.status{font-size:10px;color:var(--green);white-space:nowrap}.toolbar{display:flex;gap:4px;align-items:center}.iconbtn{min-width:29px;width:29px;padding:3px;font-size:14px}.top .toolbar button{min-height:26px;height:26px}.top .toolbar .primary{min-width:66px}
+.menubar{height:30px;min-height:30px;background:#20242b;display:flex;align-items:stretch;padding:0 8px;border-bottom:1px solid #11151a;gap:2px;overflow-x:auto;scrollbar-width:none;direction:ltr}.menubar::-webkit-scrollbar,.ribbon-tools::-webkit-scrollbar{display:none}.menu-item{border:0;border-radius:0;background:transparent;padding:0 12px;min-height:30px;color:#c7ccd4;font-size:11px}.menu-item:hover{background:#323943}.menu-item.active{background:#303944;color:#fff;border-bottom:2px solid #1689e6}
+.ribbon{height:76px;min-height:76px;background:var(--ribbon);border-bottom:1px solid #101318;display:flex;flex-direction:column;overflow:hidden}.ribbon-tools[hidden]{display:none}.ribbon-tools{display:flex;align-items:stretch;gap:0;overflow-x:auto;overflow-y:hidden;padding:5px 7px 4px;scrollbar-width:none;direction:ltr;height:100%}.tool-group{display:flex;align-items:center;gap:3px;padding:0 9px;border-right:1px solid #414751;flex:0 0 auto}.tool-group:last-child{border-right:0}.tool-stack{display:flex;align-items:center;gap:3px}.rtool{min-width:47px;height:53px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:4px 6px;background:transparent;border:1px solid transparent;border-radius:4px;color:#d7dce4;font-size:9px;white-space:nowrap}.rtool .glyph{font-size:19px;line-height:20px;color:#dce7f5}.rtool:hover{background:#343c47;border-color:#4b5562}.rtool.active{background:#164b76;border-color:#1689e6}.rtool.small{min-width:38px}.group-label{align-self:flex-end;text-align:center;color:#929ba8;font-size:9px;white-space:nowrap;padding:0 4px 1px;margin-left:4px}
+/* Three dock workspace */
+.main{min-height:0;flex:1;display:grid;grid-template-columns:205px minmax(230px,1fr) 285px;gap:4px;padding:4px;background:#11151b;direction:ltr}.panel{background:var(--panel);border:1px solid #343a43;border-radius:3px;min-height:0;overflow:hidden;display:flex;flex-direction:column}.panel-head{height:29px;min-height:29px;display:flex;align-items:center;justify-content:space-between;padding:0 8px;border-bottom:1px solid #383e48;font-size:11px;font-weight:700;background:#292e36}.panel-head small{color:var(--muted);font-weight:400;font-size:10px}.panel-body{overflow:auto;min-height:0;flex:1;padding:7px}.tree-tools{display:flex;gap:3px;padding:5px;border-bottom:1px solid var(--line)}.tree-tools button{flex:1;padding:4px 2px;min-height:27px;font-size:10px}.tree-row{display:flex;align-items:center;gap:5px;padding:4px 5px;border-radius:2px;min-height:25px;cursor:pointer;user-select:none;font-size:11px}.tree-row:hover{background:#2b333e}.tree-row.selected{background:#174d77;outline:1px solid #2386cd}.tree-row .twisty{width:12px;color:#a8b3c2;font-size:10px}.tree-row .node-icon{width:16px;text-align:center}.tree-row .node-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}.tree-row .class-tag{font-size:8px;color:#8994a3}
+.leftpanel{display:flex}.toolbox-search{padding:6px;border-bottom:1px solid var(--line);display:flex;gap:4px}.toolbox-search input{min-width:0;padding:6px 8px;font-size:11px;background:#15191f;border:1px solid #424a55;border-radius:3px;color:var(--text)}.toolbox-tabs{display:flex;border-bottom:1px solid var(--line)}.toolbox-tabs button{flex:1;border:0;border-radius:0;background:transparent;min-height:28px;padding:4px 3px;font-size:10px}.toolbox-tabs button.active{border-bottom:2px solid var(--blue2);color:#fff}.toolbox-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:7px}.asset-tile{min-height:68px;border:1px solid #3b4350;background:#272d36;border-radius:3px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;padding:7px 4px;font-size:10px;color:#d5dce6;text-align:center}.asset-tile .asset-icon{font-size:23px;color:#80caff}.asset-tile:active{background:#194c72}.toolbox-note{padding:8px;color:#8994a3;font-size:10px;line-height:1.4}
+.center{position:relative;background:#11161e;border:1px solid #343a43;border-radius:3px;overflow:hidden;min-height:0;display:flex;flex-direction:column}.center-head{height:31px;min-height:31px;display:flex;gap:5px;align-items:center;padding:0 7px;border-bottom:1px solid #3a414c;background:#262c35}.center-head strong{font-size:11px}.center-head .hint{color:#8f99a8;font-size:9px;white-space:nowrap}.scene{position:relative;flex:1;min-height:130px;overflow:hidden;background:linear-gradient(#8eb8d2 0%,#bfd2de 40%,#323e4b 41%,#111b29 100%)}#viewport3d{display:block;width:100%;height:100%;touch-action:none;outline:none}.viewport-hud{position:absolute;top:7px;left:8px;background:#131922d9;border:1px solid #4b5662;border-radius:3px;padding:4px 6px;color:#d1dbe5;font-size:9px;pointer-events:none}.scene-controls{position:absolute;bottom:8px;left:8px;right:8px;display:flex;justify-content:space-between;pointer-events:none}.scene-controls>*{pointer-events:auto}.scene-controls button{min-height:27px;padding:4px 7px;font-size:10px}.floating{display:flex;gap:3px}.tabbar{display:flex;gap:2px}.tabbar button{background:transparent;border-color:transparent;padding:4px 8px;min-height:25px;font-size:10px;border-radius:3px}.tabbar button.active{background:#374454;border-color:#536174;color:white}.center-bottom{height:30px;min-height:30px;border-top:1px solid #3a414b;background:#272d36;padding:3px 6px;display:flex;gap:4px;align-items:center}.center-bottom button{font-size:10px;min-height:23px;padding:3px 7px;border-radius:3px}.center-bottom .wide{font-size:9px}
+.output{display:block;height:94px;min-height:94px;overflow:auto;border-top:1px solid #3a414b;padding:5px 8px;background:#0f141b;color:#bac7d8;font:10px/1.45 ui-monospace,Consolas,monospace}.output:not(.open){height:23px;min-height:23px;overflow:hidden;padding-top:4px}.output-head{height:22px;display:flex;align-items:center;gap:6px;position:sticky;top:-5px;background:#151b24;margin:-5px -8px 5px;padding:0 7px;color:#d5dbe5;border-bottom:1px solid #303844;font-family:system-ui,sans-serif;font-size:10px}.output-body{white-space:pre-wrap}.output-line{padding:1px 0}.output-line.error{color:#ff8f8f}.output-line.warn{color:#efc477}.output-line.info{color:#8ecbff}
+.rightpanel{display:flex;flex-direction:column}.explorer-dock{height:49%;min-height:130px;display:flex;flex-direction:column;border-bottom:1px solid #454d58}.properties-dock{min-height:0;flex:1;display:flex;flex-direction:column}.dock-title{height:28px;min-height:28px;background:#292e36;border-bottom:1px solid #3c444f;display:flex;align-items:center;justify-content:space-between;padding:0 8px;font-size:11px;font-weight:700}.dock-title .dock-actions{display:flex;gap:2px}.dock-title button{min-height:20px;width:23px;padding:0;font-size:11px;background:transparent;border:0;color:#aeb8c5}.right-tabs{display:flex;border-bottom:1px solid var(--line);height:27px;min-height:27px}.right-tabs button{flex:1;border:0;border-radius:0;background:transparent;font-size:10px;padding:3px}.right-tabs button.active{color:#fff;border-bottom:2px solid var(--cyan)}.props{display:grid;gap:7px}.prop-group{border-bottom:1px solid #343b45;padding-bottom:7px}.prop-title{font-weight:700;font-size:10px;color:#cad4e1;margin-bottom:6px;background:#272d36;padding:4px 6px}.field{display:grid;grid-template-columns:76px 1fr;align-items:center;gap:6px;margin:5px 0}.field label{color:#aab3bf;font-size:10px}.field input{font-size:10px;padding:5px 6px;border-radius:3px;background:#151a21;border-color:#3b434e}.triple{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}.triple input{min-width:0;padding:5px 2px;text-align:center}.check{display:flex;align-items:center;gap:7px;font-size:10px;color:#bdc6d2}.check input{width:auto}.empty{padding:18px 10px;text-align:center;color:var(--muted);font-size:10px}
+.editor{display:none;flex:1;min-height:0;background:#111720}.editor.open{display:flex;flex-direction:column}.editorbar{height:30px;min-height:30px;display:flex;align-items:center;gap:7px;padding:3px 7px;border-bottom:1px solid #3a424d;color:#aeb9c8;background:#222a34;font-size:10px}.editorbar button{min-height:23px;padding:3px 7px;font-size:10px}.code-editor{display:flex;flex:1;min-height:100px;overflow:hidden;background:#0f141b;direction:ltr}.line-numbers{width:39px;flex:0 0 39px;padding:12px 7px 12px 0;text-align:right;color:#637083;background:#121923;border-right:1px solid #29313d;font:11px/1.6 ui-monospace,Consolas,monospace;white-space:pre;overflow:hidden;user-select:none}.code-wrap{position:relative;flex:1;min-width:0;overflow:hidden}.code-highlight,.codearea{position:absolute;inset:0;margin:0;padding:12px 13px;border:0;border-radius:0;width:100%;height:100%;font:11px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;tab-size:4;white-space:pre;overflow:auto;letter-spacing:0}.code-highlight{pointer-events:none;color:#d9e2ee;background:transparent}.codearea{resize:none;background:transparent;color:transparent;caret-color:#fff;outline:none;z-index:2;direction:ltr;text-align:left;white-space:pre;overflow:auto;-webkit-text-fill-color:transparent;selection-background-color:#35587f}.codearea::selection{background:#31577d77}.tok-key{color:#d69bf2}.tok-string{color:#b7d88a}.tok-comment{color:#718297}.tok-number{color:#e6b56d}.tok-api{color:#80c8ef}.editor-footer{height:23px;min-height:23px;display:flex;align-items:center;gap:12px;padding:0 8px;background:#1b222c;border-top:1px solid #343c48;color:#9ca9ba;font-size:9px}
+.mobile-nav{display:none;background:#1a2029;border-top:1px solid #343b46;padding:5px;gap:4px;grid-template-columns:repeat(5,1fr);padding-bottom:max(5px,env(safe-area-inset-bottom));direction:ltr}.mobile-nav button{background:transparent;border:0;border-radius:4px;font-size:9px;line-height:1.25;padding:5px 2px;color:#b4bfce;min-height:42px}.mobile-nav button.active{background:#164d79;color:white}.toast{position:fixed;bottom:65px;left:50%;transform:translateX(-50%);background:#26364a;border:1px solid #4c6684;border-radius:5px;padding:8px 12px;box-shadow:var(--shadow);z-index:50;display:none;font-size:11px}.toast.show{display:block}.modalback{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;z-index:60;padding:18px}.modal{width:min(420px,100%);background:#252c36;border:1px solid #4b5665;border-radius:7px;padding:15px;box-shadow:var(--shadow)}.modal h3{margin:0 0 10px;font-size:14px}.modal .row{display:flex;gap:7px;margin-top:12px}.modal .row button{flex:1}
+@media(max-width:980px){.main{grid-template-columns:180px minmax(200px,1fr) 255px}.project-name{max-width:150px}}
+@media(max-width:720px){.top{height:34px;min-height:34px;padding:0 6px;gap:5px}.brand{font-size:10px}.project-name{max-width:110px;font-size:10px}.status{display:none}.top .toolbar{gap:2px}.top .toolbar button{min-width:25px;width:auto;padding:2px 5px;font-size:10px}.menubar{height:29px;min-height:29px;padding:0 4px}.menu-item{padding:0 10px;font-size:10px}.ribbon{height:67px;min-height:67px}.rtool{height:48px;min-width:44px}.tool-group{padding:0 5px}.main{display:flex;padding:3px;gap:3px;min-height:0}.leftpanel,.rightpanel{display:none}.center{width:100%;border-radius:2px}.center-head{height:29px;min-height:29px;padding:0 5px}.center-head .hint{display:none}.scene{min-height:120px}.output{height:78px;min-height:78px}.center-bottom{height:28px;min-height:28px;overflow-x:auto}.center-bottom .wide{display:none}.mobile-nav{display:grid}.leftpanel.show-mobile,.rightpanel.show-mobile{display:flex;position:fixed;top:170px;bottom:59px;width:min(360px,88vw);z-index:30;box-shadow:var(--shadow);border:1px solid #627080}.leftpanel.show-mobile{left:5px}.rightpanel.show-mobile{right:5px}.rightpanel.mobile-focus-explorer .properties-dock{display:none}.rightpanel.mobile-focus-properties .explorer-dock{display:none}.editor.open{min-height:0}.center.editor-mode .scene{display:none}.center.editor-mode .editor{display:flex}.center.editor-mode .output{height:74px;min-height:74px}.center.editor-mode .center-bottom{display:none}.code-highlight,.codearea{font-size:11px}.dock-title{height:30px;min-height:30px}}
+@media(max-width:390px){.brand span{display:none}.project-name{max-width:88px}.menu-item{padding:0 8px}.rtool{min-width:40px;padding:3px}.tool-group{padding:0 3px}.mobile-nav button{font-size:8px}}
+</style></head>
+<body><div class="app">
+<header class="top">
+  <div class="brand"><b>◈</b> STUDIO <span style="color:#aab6c7">MOBILE</span></div>
+  <div class="project-name" id="projectLabel">Untitled Experience</div>
+  <span class="spacer"></span><span class="status" id="saveStatus">● Saved</span>
+  <div class="toolbar"><button class="iconbtn" title="Undo" id="undoBtn">↶</button><button class="iconbtn" title="Redo" id="redoBtn">↷</button><button class="primary" id="playBtn">▶ Play</button><button class="iconbtn" title="Save" id="saveBtn">▣</button><button class="iconbtn" title="More" id="menuBtn">⋯</button></div>
+</header>
+<nav class="menubar" aria-label="Studio ribbon tabs">
+  <button class="menu-item" data-ribbon="file">FILE</button><button class="menu-item active" data-ribbon="home">HOME</button><button class="menu-item" data-ribbon="model">MODEL</button><button class="menu-item" data-ribbon="avatar">AVATAR</button><button class="menu-item" data-ribbon="ui">UI</button><button class="menu-item" data-ribbon="script">SCRIPT</button><button class="menu-item" data-ribbon="test">TEST</button><button class="menu-item" data-ribbon="view">VIEW</button><button class="menu-item" data-ribbon="plugins">PLUGINS</button>
+</nav>
+<section class="ribbon" aria-label="Studio tools">
+ <div class="ribbon-tools" data-toolbar="home">
+  <div class="tool-group"><button class="rtool active" data-tool="select"><span class="glyph">↖</span>Select</button><button class="rtool" data-tool="move"><span class="glyph">✥</span>Move</button><button class="rtool" data-tool="scale"><span class="glyph">⛶</span>Scale</button><button class="rtool" data-tool="rotate"><span class="glyph">⟳</span>Rotate</button><div class="group-label">Tools</div></div>
+  <div class="tool-group"><button class="rtool" data-insert="Part"><span class="glyph">◧</span>Part</button><button class="rtool" data-insert="SpawnLocation"><span class="glyph">⌖</span>Spawn</button><button class="rtool" data-insert="Model"><span class="glyph">⬡</span>Model</button><div class="group-label">Insert</div></div>
+  <div class="tool-group"><button class="rtool" data-insert="Script"><span class="glyph">⌘</span>Script</button><button class="rtool" data-action="color"><span class="glyph">◉</span>Color</button><button class="rtool" data-action="material"><span class="glyph">▦</span>Material</button><div class="group-label">Edit</div></div>
+  <div class="tool-group"><button class="rtool" data-action="group"><span class="glyph">▣</span>Group</button><button class="rtool" data-action="anchor"><span class="glyph">⚓</span>Anchor</button><button class="rtool" data-panel="toolbox"><span class="glyph">▤</span>Toolbox</button><div class="group-label">Objects</div></div>
+ </div>
+ <div class="ribbon-tools" data-toolbar="model" hidden>
+  <div class="tool-group"><button class="rtool" data-tool="select"><span class="glyph">↖</span>Select</button><button class="rtool" data-tool="move"><span class="glyph">✥</span>Move</button><button class="rtool" data-tool="scale"><span class="glyph">⛶</span>Scale</button><button class="rtool" data-tool="rotate"><span class="glyph">⟳</span>Rotate</button><div class="group-label">Transform</div></div>
+  <div class="tool-group"><button class="rtool" data-action="group"><span class="glyph">▣</span>Group</button><button class="rtool" data-action="ungroup"><span class="glyph">▧</span>Ungroup</button><button class="rtool" data-action="align"><span class="glyph">☷</span>Align</button><div class="group-label">Model</div></div>
+  <div class="tool-group"><button class="rtool" data-action="anchor"><span class="glyph">⚓</span>Anchor</button><button class="rtool" data-action="collision"><span class="glyph">◈</span>Collision</button><button class="rtool" data-action="join"><span class="glyph">⊞</span>Join</button><div class="group-label">Constraints</div></div>
+ </div>
+ <div class="ribbon-tools" data-toolbar="avatar" hidden>
+  <div class="tool-group"><button class="rtool" data-action="build-rig"><span class="glyph">♟</span>Build Rig</button><button class="rtool" data-action="animation"><span class="glyph">▶</span>Animation</button><button class="rtool" data-insert="Accessory"><span class="glyph">◇</span>Accessory</button><div class="group-label">Avatar</div></div>
+ </div>
+ <div class="ribbon-tools" data-toolbar="ui" hidden>
+  <div class="tool-group"><button class="rtool" data-insert="ScreenGui"><span class="glyph">▣</span>ScreenGui</button><button class="rtool" data-insert="Frame"><span class="glyph">▭</span>Frame</button><button class="rtool" data-insert="TextLabel"><span class="glyph">T</span>TextLabel</button><button class="rtool" data-insert="TextButton"><span class="glyph">▢</span>TextButton</button><div class="group-label">Interface</div></div>
+ </div>
+ <div class="ribbon-tools" data-toolbar="script" hidden>
+  <div class="tool-group"><button class="rtool" data-insert="Script"><span class="glyph">⌘</span>Script</button><button class="rtool" data-insert="LocalScript"><span class="glyph">⌘</span>LocalScript</button><button class="rtool" data-insert="ModuleScript"><span class="glyph">▤</span>ModuleScript</button><div class="group-label">Create</div></div>
+  <div class="tool-group"><button class="rtool" data-view="script"><span class="glyph">✎</span>Editor</button><button class="rtool" data-action="format"><span class="glyph">≡</span>Format</button><button class="rtool" data-action="run"><span class="glyph">▶</span>Run</button><div class="group-label">Luau</div></div>
+ </div>
+ <div class="ribbon-tools" data-toolbar="test" hidden>
+  <div class="tool-group"><button class="rtool" data-action="play"><span class="glyph">▶</span>Play</button><button class="rtool" data-action="run"><span class="glyph">▷</span>Run</button><button class="rtool" data-action="stop"><span class="glyph">■</span>Stop</button><div class="group-label">Playtest Preview</div></div>
+  <div class="tool-group"><button class="rtool" data-view="output"><span class="glyph">▤</span>Output</button><button class="rtool" data-panel="explorer"><span class="glyph">☷</span>Explorer</button><div class="group-label">Windows</div></div>
+ </div>
+ <div class="ribbon-tools" data-toolbar="view" hidden>
+  <div class="tool-group"><button class="rtool" data-panel="explorer"><span class="glyph">☷</span>Explorer</button><button class="rtool" data-panel="properties"><span class="glyph">⚙</span>Properties</button><button class="rtool" data-panel="toolbox"><span class="glyph">▤</span>Toolbox</button><button class="rtool" data-view="output"><span class="glyph">▥</span>Output</button><div class="group-label">Panels</div></div>
+  <div class="tool-group"><button class="rtool" data-action="zoom-out"><span class="glyph">−</span>Zoom Out</button><button class="rtool" data-action="zoom-in"><span class="glyph">＋</span>Zoom In</button><button class="rtool" data-action="reset-camera"><span class="glyph">⟳</span>Reset View</button><div class="group-label">Camera</div></div>
+ </div>
+ <div class="ribbon-tools" data-toolbar="plugins" hidden><div class="toolbox-note">No plugins installed in this standalone preview. Plugin support is not part of this build.</div></div>
+ <div class="ribbon-tools" data-toolbar="file" hidden><div class="tool-group"><button class="rtool" data-action="new"><span class="glyph">＋</span>New</button><button class="rtool" data-action="open"><span class="glyph">▣</span>Open</button><button class="rtool" data-action="save"><span class="glyph">▣</span>Save</button><button class="rtool" data-action="export"><span class="glyph">⇧</span>Export</button><div class="group-label">Project</div></div></div>
+</section>
+<main class="main">
+ <aside class="panel leftpanel" id="leftPanel">
+  <div class="panel-head"><span>Toolbox</span><small>Insert assets</small></div>
+  <div class="toolbox-tabs"><button class="active" data-toolbox-category="Models">Models</button><button data-toolbox-category="Images">Images</button><button data-toolbox-category="Plugins">Plugins</button></div>
+  <div class="toolbox-search"><input id="toolboxSearch" placeholder="Search the local toolbox…"/><button id="toolboxSearchBtn">⌕</button></div>
+  <div class="panel-body" id="toolboxResults">
+   <div class="toolbox-grid">
+    <button class="asset-tile" data-insert="Part"><span class="asset-icon">◧</span>Basic Part</button><button class="asset-tile" data-insert="SpawnLocation"><span class="asset-icon">⌖</span>Spawn Pad</button>
+    <button class="asset-tile" data-insert="Model"><span class="asset-icon">⬡</span>Model</button><button class="asset-tile" data-insert="Folder"><span class="asset-icon">▰</span>Folder</button>
+    <button class="asset-tile" data-insert="Script"><span class="asset-icon">⌘</span>Script</button><button class="asset-tile" data-insert="ModuleScript"><span class="asset-icon">▤</span>Module</button>
+    <button class="asset-tile" data-insert="ScreenGui"><span class="asset-icon">▣</span>Screen GUI</button><button class="asset-tile" data-insert="TextLabel"><span class="asset-icon">T</span>Text Label</button>
+   </div><div class="toolbox-note">Local starter assets only. Online Creator Store assets are not connected in this preview.</div>
+  </div>
+ </aside>
+ <section class="center" id="centerPanel">
+  <div class="center-head"><strong id="centerTitle">Workspace</strong><span class="hint">Drag to orbit · Pinch to zoom · Select an object to inspect</span><span class="spacer"></span><div class="tabbar"><button class="active" data-view="scene">3D View</button><button data-view="script">Script</button><button data-view="output">Output</button></div></div>
+  <div class="scene" id="scene"><canvas id="viewport3d" aria-label="3D viewport"></canvas><div class="viewport-hud" id="viewportHud">3D Viewport · Orbit: drag · Zoom: pinch</div><div class="scene-controls"><div class="floating"><button id="zoomOut">−</button><button id="zoomIn">＋</button><button id="resetView">⟳</button></div><button id="focusBtn">◎ Focus</button></div></div>
+  <div class="editor" id="editor"><div class="editorbar"><span>⌘</span><strong id="scriptTitle">Script</strong><span class="spacer"></span><span>Luau</span><button id="formatBtn">Format</button><button id="runScriptBtn" data-action="run">▶ Run</button></div><div class="code-editor"><div class="line-numbers" id="lineNumbers">1</div><div class="code-wrap"><pre class="code-highlight" id="codeHighlight" aria-hidden="true"></pre><textarea class="codearea" id="codeArea" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">-- Write Luau here
+local part = workspace:FindFirstChild("Part")
+
+if part then
+    part.Anchored = true
+    print("Hello from Studio Mobile")
+end</textarea></div></div><div class="editor-footer"><span id="cursorPosition">Ln 1, Col 1</span><span>UTF-8</span><span>Luau</span><span class="spacer"></span><span id="runtimeStatus">Checking Luau runtime…</span></div></div>
+  <div class="output open" id="output"><div class="output-head"><strong>Output</strong><span class="muted">Luau Preview Console</span><span class="spacer"></span><button id="clearOutput">Clear</button><button id="collapseOutput">−</button></div><div class="output-body" id="outputBody"><div class="output-line info">[Studio Mobile] Ready. Select an object or insert a Part.</div><div class="output-line warn">[Info] Standalone preview — not the Roblox engine.</div></div></div>
+  <div class="center-bottom"><button id="insertPart">＋ Part</button><button id="insertSpawn">＋ Spawn</button><button id="insertModel">＋ Model</button><button data-insert="Script">＋ Script</button><span class="spacer"></span><span class="muted wide" style="font-size:9px" id="selectionLabel">No selection</span></div>
+ </section>
+ <aside class="panel rightpanel" id="rightPanel">
+  <section class="explorer-dock"><div class="dock-title"><span>Explorer</span><span class="dock-actions"><button title="Expand" id="expandTree">⌄</button><button title="Add" id="explorerAdd">＋</button><button title="Close" data-hide-panel="rightPanel">×</button></span></div><div class="toolbox-search"><input id="treeFilter" placeholder="Filter workspace (Ctrl+Shift+X)"/></div><div class="tree-tools"><button id="addPart">＋ Part</button><button id="addFolder">▰ Folder</button><button id="addScript">⌘ Script</button></div><div class="panel-body" id="tree"></div></section>
+  <section class="properties-dock"><div class="dock-title"><span>Properties</span><span class="muted" id="propertyClass">No selection</span></div><div class="right-tabs"><button class="active" data-tab="properties">Properties</button><button data-tab="attributes">Attributes</button></div><div class="panel-body" id="inspector"><div class="empty">Select an object in Explorer to inspect its properties.</div></div></section>
+ </aside>
+</main>
+<nav class="mobile-nav"><button data-panel="toolbox">▤<br>Toolbox</button><button data-panel="scene">▧<br>Viewport</button><button data-panel="explorer">☷<br>Explorer</button><button data-panel="properties">⚙<br>Properties</button><button data-panel="script">⌘<br>Script</button></nav>
+<div class="toast" id="toast"></div>
+<div class="modalback" id="modalBack"><div class="modal"><h3 id="modalTitle">قائمة المشروع</h3><div id="modalContent"></div><div class="row"><button id="modalCancel">إغلاق</button><button class="primary" id="modalAction">موافق</button></div></div></div>
+<input type="file" id="openFile" accept=".json,.studiojson,.rbxmx,.rbxlx,application/json,application/xml,text/xml" class="hidden">
+</div>
 <script>
-const $=id=>document.getElementById(id);let nodes=[{id:1,Name:"Baseplate",ClassName:"Part",Position:[0,-.6,0],Size:[18,1,18],Color:"#456b82",Anchored:true,Parent:0}],nextId=2,selected=1,requestId=0,angleX=-.48,angleY=.68,zoom=22,drag=null;
-function selectedNode(){return nodes.find(n=>n.id===selected)}
-function renderTree(){const t=$("tree");t.innerHTML="";nodes.forEach(n=>{const d=document.createElement("div");d.className="treeitem"+(n.id===selected?" active":"");d.innerHTML='<span>◧</span><span></span><small></small>';d.children[1].textContent=n.Name;d.children[2].textContent=n.ClassName;d.onclick=()=>{selected=n.id;renderTree();renderProps()};t.appendChild(d)});$("count").textContent=nodes.length+" items"}
-function renderProps(){const n=selectedNode();if(!n)return;$("pName").value=n.Name;$("pPos").value=n.Position.join(", ");$("pSize").value=n.Size.join(", ");$("pColor").value=n.Color;$("pAnchored").checked=!!n.Anchored;$("className").textContent=n.ClassName+" · "+n.id}
-function newPart(){const n={id:nextId++,Name:"Part",ClassName:"Part",Position:[0,2+nodes.length%5,0],Size:[4,1,4],Color:"#4aa3c7",Anchored:true,Parent:0};nodes.push(n);selected=n.id;renderTree();renderProps();draw()}
-function deleteSelected(){if(nodes.length<2)return;nodes=nodes.filter(n=>n.id!==selected);selected=nodes[nodes.length-1].id;renderTree();renderProps();draw()}
-function setProp(k,v){const n=selectedNode();if(n){n[k]=v;renderTree();draw()}}
-function setVector(k,v){const a=v.split(/[ ,]+/).filter(Boolean).map(Number);if(a.length===3&&a.every(Number.isFinite)){selectedNode()[k]=a;draw()}else renderProps()}
-document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x===b));$("properties").style.display=b.dataset.tab==="properties"?"block":"none";$("scriptpane").style.display=b.dataset.tab==="scriptpane"?"flex":"none"});
-function project(){return {format:"StudioMobile",version:1,workspace:nodes.map(({id,...n})=>n)}}
-function exportProject(){const data=JSON.stringify(project(),null,2);if(window.AndroidBridge)AndroidBridge.exportFile("StudioMobile.studiojson",data,"application/json");else{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([data],{type:"application/json"}));a.download="StudioMobile.studiojson";a.click()}}
-function importProject(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const p=JSON.parse(r.result);if(!Array.isArray(p.workspace))throw Error("Invalid project");nodes=p.workspace.map(n=>({...n,id:nextId++,Position:n.Position||[0,1,0],Size:n.Size||[4,1,4],Color:n.Color||"#4aa3c7"}));if(!nodes.length)throw Error("Empty project");selected=nodes[0].id;renderTree();renderProps();draw()}catch(err){alert("Import failed: "+err.message)}};r.readAsText(f);e.target.value=""}
-function runScript(){const id=String(++requestId);$("output").textContent="Compiling and running…";if(window.AndroidBridge&&AndroidBridge.isLuauAvailable())AndroidBridge.runLuauAsync($("code").value,id);else $("output").textContent="Native Luau runtime unavailable."}
-window.StudioMobile={onLuauResult:(id,result)=>{if(id===String(requestId))$("output").textContent=result}};$("runtimeLabel").textContent=window.AndroidBridge&&AndroidBridge.isLuauAvailable()?"Luau native · ARM64":"Native runtime unavailable";
-const cube=[[-1,-1,-1],[1,-1,-1],[1,1,-1],[-1,-1,-1],[1,1,-1],[-1,1,-1],[-1,-1,1],[1,-1,1],[1,1,1],[-1,-1,1],[1,1,1],[-1,1,1],[-1,-1,-1],[-1,1,-1],[-1,1,1],[-1,-1,-1],[-1,1,1],[-1,-1,1],[1,-1,-1],[1,1,-1],[1,1,1],[1,-1,-1],[1,1,1],[1,-1,1],[-1,-1,-1],[-1,-1,1],[1,-1,1],[-1,-1,-1],[1,-1,1],[1,-1,-1],[-1,1,-1],[-1,1,1],[1,1,1],[-1,1,-1],[1,1,1],[1,1,-1]];let gl,program,pb,cb,loc;
-function initGL(){const c=$("view");gl=c.getContext("webgl",{antialias:true,alpha:false});if(!gl){$("engineState").textContent="WebGL unavailable";return}const vs="attribute vec3 p;attribute vec3 color;uniform vec2 resolution;uniform vec2 rot;uniform float zoom;varying vec3 v;void main(){float cy=cos(rot.y),sy=sin(rot.y),cx=cos(rot.x),sx=sin(rot.x);vec3 q=vec3(p.x*cy-p.z*sy,p.y,p.x*sy+p.z*cy);q=vec3(q.x,q.y*cx-q.z*sx,q.y*sx+q.z*cx);float z=q.z+zoom;gl_Position=vec4(q.x*1.7/(z*resolution.y/resolution.x),q.y*1.7/z,(z-2.0)/40.0,1.0);v=color;}";const fs="precision mediump float;varying vec3 v;void main(){gl_FragColor=vec4(v,1.0);}";function shader(type,src){const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(s));return s}program=gl.createProgram();gl.attachShader(program,shader(gl.VERTEX_SHADER,vs));gl.attachShader(program,shader(gl.FRAGMENT_SHADER,fs));gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program));loc={p:gl.getAttribLocation(program,"p"),color:gl.getAttribLocation(program,"color"),resolution:gl.getUniformLocation(program,"resolution"),rot:gl.getUniformLocation(program,"rot"),zoom:gl.getUniformLocation(program,"zoom")};pb=gl.createBuffer();cb=gl.createBuffer();$("engineState").textContent="WebGL 1.0 ready";resize()}
-function resize(){const c=$("view"),r=c.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);c.width=Math.max(1,Math.floor(r.width*d));c.height=Math.max(1,Math.floor(r.height*d));draw()}
-function draw(){if(!gl||!program)return;const ps=[],cs=[];nodes.slice(0,5000).forEach(n=>{const col=[parseInt(n.Color.slice(1,3),16)/255,parseInt(n.Color.slice(3,5),16)/255,parseInt(n.Color.slice(5,7),16)/255];cube.forEach(v=>{ps.push(n.Position[0]+v[0]*n.Size[0]/2,n.Position[1]+v[1]*n.Size[1]/2,n.Position[2]+v[2]*n.Size[2]/2);cs.push(...col)})});gl.viewport(0,0,$("view").width,$("view").height);gl.clearColor(.045,.065,.09,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.enable(gl.DEPTH_TEST);gl.useProgram(program);gl.uniform2f(loc.resolution,$("view").width,$("view").height);gl.uniform2f(loc.rot,angleX,angleY);gl.uniform1f(loc.zoom,zoom);gl.bindBuffer(gl.ARRAY_BUFFER,pb);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(ps),gl.DYNAMIC_DRAW);gl.enableVertexAttribArray(loc.p);gl.vertexAttribPointer(loc.p,3,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ARRAY_BUFFER,cb);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(cs),gl.DYNAMIC_DRAW);gl.enableVertexAttribArray(loc.color);gl.vertexAttribPointer(loc.color,3,gl.FLOAT,false,0,0);gl.drawArrays(gl.TRIANGLES,0,ps.length/3)}
-$("view").addEventListener("pointerdown",e=>{drag={x:e.clientX,y:e.clientY};$("view").setPointerCapture(e.pointerId)});$("view").addEventListener("pointermove",e=>{if(!drag)return;angleY+=(e.clientX-drag.x)*.009;angleX=Math.max(-1.35,Math.min(1.35,angleX+(e.clientY-drag.y)*.009));drag={x:e.clientX,y:e.clientY};draw()});$("view").addEventListener("pointerup",()=>drag=null);$("view").addEventListener("pointercancel",()=>drag=null);$("view").addEventListener("wheel",e=>{zoom=Math.max(7,Math.min(55,zoom+e.deltaY*.025));draw()},{passive:true});window.addEventListener("resize",resize);renderTree();renderProps();try{initGL()}catch(e){$("engineState").textContent="Render error";console.error(e)}setTimeout(resize,100);
+(()=>{
+const $=id=>document.getElementById(id); const uid=()=>Math.random().toString(36).slice(2,10); const clone=x=>JSON.parse(JSON.stringify(x));
+const sample=()=>({name:'Untitled Experience',version:2,root:[
+{id:'workspace',name:'Workspace',className:'Workspace',expanded:true,children:[
+{id:'camera',name:'Camera',className:'Camera',children:[]},
+{id:'terrain',name:'Terrain',className:'Terrain',children:[]},
+{id:'spawn',name:'SpawnLocation',className:'SpawnLocation',position:{x:0,y:1,z:0},size:{x:6,y:1,z:6},rotation:{x:0,y:0,z:0},color:'#36a88c',anchored:true,transparency:0,children:[]},
+{id:'part1',name:'Part',className:'Part',position:{x:0,y:4,z:0},size:{x:4,y:2,z:4},rotation:{x:0,y:0,z:0},color:'#4d9cff',anchored:true,transparency:0,children:[]},
+{id:'part2',name:'Part2',className:'Part',position:{x:7,y:2,z:0},size:{x:3,y:3,z:3},rotation:{x:0,y:28,z:0},color:'#d6a25b',anchored:true,transparency:0,children:[]}
+]},
+{id:'players',name:'Players',className:'Players',children:[]},
+{id:'lighting',name:'Lighting',className:'Lighting',children:[]},
+{id:'materialService',name:'MaterialService',className:'MaterialService',children:[]},
+{id:'replicatedFirst',name:'ReplicatedFirst',className:'ReplicatedFirst',children:[]},
+{id:'replicated',name:'ReplicatedStorage',className:'ReplicatedStorage',expanded:false,children:[]},
+{id:'serverscripts',name:'ServerScriptService',className:'ServerScriptService',expanded:true,children:[{id:'script1',name:'Script',className:'Script',source:'-- Server Script\nprint("Hello world")\n',children:[]}]},
+{id:'serverStorage',name:'ServerStorage',className:'ServerStorage',children:[]},
+{id:'starterGui',name:'StarterGui',className:'StarterGui',children:[]},
+{id:'starterPack',name:'StarterPack',className:'StarterPack',children:[]},
+{id:'starterPlayer',name:'StarterPlayer',className:'StarterPlayer',children:[]},
+{id:'teams',name:'Teams',className:'Teams',children:[]},
+{id:'soundService',name:'SoundService',className:'SoundService',children:[]},
+{id:'textChat',name:'TextChatService',className:'TextChatService',children:[]}
+],selected:'part1'});
+let project=sample(),activeView='scene',activeRight='properties',play=false,zoom=1,undoStack=[],redoStack=[],currentScript='script1',dragNode=null;
+const CLASS_DEFAULTS={Part:{position:{x:0,y:2,z:0},size:{x:4,y:1,z:2},rotation:{x:0,y:0,z:0},color:'#4d9cff',anchored:true,transparency:0},SpawnLocation:{position:{x:0,y:1,z:0},size:{x:6,y:1,z:6},rotation:{x:0,y:0,z:0},color:'#36a88c',anchored:true,transparency:0},Model:{pivot:{x:0,y:0,z:0}},Folder:{},Script:{source:'-- Luau\nprint(\"Hello\")\n',disabled:false},LocalScript:{source:'-- LocalScript\n',disabled:false},ModuleScript:{source:'local Module = {}\nreturn Module\n'},ScreenGui:{children:[]},Frame:{size:{x:300,y:200},backgroundColor3:'#ffffff',children:[]},TextLabel:{text:'Label',textColor3:'#111111',children:[]},TextButton:{text:'Button',children:[]},Accessory:{children:[]}};
+function normalizeNode(n,parent=null){n.id=n.id||uid();n.name=n.name||n.className||'Instance';n.className=n.className||'Folder';n.children=Array.isArray(n.children)?n.children:[];n.attributes=n.attributes&&typeof n.attributes==='object'?n.attributes:{};n.tags=Array.isArray(n.tags)?n.tags:[];n.archivable=n.archivable!==false;for(const c of n.children)normalizeNode(c,n);return n}
+function normalizeProject(p){p.name=p.name||'Untitled Experience';p.root=Array.isArray(p.root)?p.root:[];p.root.forEach(n=>normalizeNode(n,null));return p}
+function getParent(id){return find(id)?.parent||null}
+function getFullName(id){let f=find(id);if(!f)return '';let a=[f.node.name],p=f.parent;while(p){a.unshift(p.name);p=find(p.id)?.parent||null}return a.join('.')}
+function allNodes(){let a=[];function rec(ns){for(const n of ns){a.push(n);rec(n.children||[])}}rec(project.root);return a;}
+const iconFor=c=>({Workspace:'🌐',Part:'🧊',SpawnLocation:'📍',Folder:'📁',Model:'🧩',Script:'📜',LocalScript:'📜',ModuleScript:'📦',ServerScriptService:'⚙️',ReplicatedStorage:'📦',Lighting:'☀️',Camera:'🎥',Terrain:'🏔️',Players:'👥',MaterialService:'🎨',ReplicatedFirst:'📦',ServerStorage:'🗄️',StarterGui:'🖥️',StarterPack:'🎒',StarterPlayer:'🧍',Teams:'👥',SoundService:'🔊',TextChatService:'💬'})[c]||'◇';
+function find(id,nodes=project.root,parent=null){for(const n of nodes){if(n.id===id)return {node:n,parent,arr:nodes};const x=find(id,n.children||[],n);if(x)return x;}return null}
+function walk(nodes,fn,depth=0){nodes.forEach(n=>{fn(n,depth);if(n.expanded)walk(n.children||[],fn,depth+1)})}
+function selected(){return find(project.selected)?.node||null}
+function snapshot(){undoStack.push(clone(project));if(undoStack.length>60)undoStack.shift();redoStack=[];markDirty()}
+function markDirty(){ $('saveStatus').textContent='● تغييرات غير محفوظة';$('saveStatus').style.color='var(--orange)';}
+function toast(t){$('toast').textContent=t;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),1900)}
+function render(){ $('projectLabel').textContent=project.name; renderTree();renderScene();renderInspector();}
+function renderTree(){let el=$('tree');el.innerHTML='';walk(project.root,(n,d)=>{let row=document.createElement('div');row.className='tree-row'+(n.id===project.selected?' selected':'');row.style.paddingLeft=(7+d*15)+'px';let has=(n.children||[]).length>0;row.innerHTML=`<span class="twisty">${has?(n.expanded?'▾':'▸'):''}</span><span class="node-icon">${iconFor(n.className)}</span><span class="node-name"></span><span class="class-tag">${n.className}</span>`;row.querySelector('.node-name').textContent=n.name;row.onclick=()=>{project.selected=n.id;if(n.className.includes('Script')){currentScript=n.id;switchView('script')}render();};row.ondblclick=()=>{if(has){n.expanded=!n.expanded;renderTree()}};row.oncontextmenu=e=>{e.preventDefault();project.selected=n.id;render();openContext()};el.appendChild(row)});}
+let glState=null,camera={yaw:0.72,pitch:0.62,distance:24,target:[0,2,0]},pointer=null,raf3d=0,viewportInputsBound=false,viewportResizeObserver=null;
+function mat4Perspective(fovy,aspect,near,far){let f=1/Math.tan(fovy/2),nf=1/(near-far);return [f/aspect,0,0,0,0,f,0,0,0,0,(far+near)*nf,-1,0,0,2*far*near*nf,0]}
+function mat4LookAt(eye,center,up){let z=norm(sub(eye,center)),x=norm(cross(up,z)),y=cross(z,x);return [x[0],y[0],z[0],0,x[1],y[1],z[1],0,x[2],y[2],z[2],0,-dot(x,eye),-dot(y,eye),-dot(z,eye),1]}
+function sub(a,b){return a.map((v,i)=>v-b[i])}function dot(a,b){return a.reduce((s,v,i)=>s+v*b[i],0)}function cross(a,b){return [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]]}function norm(a){let l=Math.hypot(...a)||1;return a.map(v=>v/l)}
+function mul4(a,b){let o=new Array(16);for(let c=0;c<4;c++)for(let r=0;r<4;r++)o[c*4+r]=a[r]*b[c*4]+a[4+r]*b[c*4+1]+a[8+r]*b[c*4+2]+a[12+r]*b[c*4+3];return o}
+function modelMatrix(p,size){return [size.x,0,0,0,0,size.y,0,0,0,0,size.z,0,p.x,p.y,p.z,1]}
+function shader(gl,type,src){let sh=gl.createShader(type);gl.shaderSource(sh,src);gl.compileShader(sh);if(!gl.getShaderParameter(sh,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(sh));return sh}
+function initViewport(){
+ if(glState)return;
+ const canvas=$('viewport3d');
+ if(!canvas)return;
+ try{
+  const gl=canvas.getContext('webgl',{alpha:true,antialias:true,depth:true,powerPreference:'low-power'});
+  if(!gl){$('viewportHud').textContent='WebGL غير متاح على هذا الجهاز';return;}
+  const vertexShader=shader(gl,gl.VERTEX_SHADER,
+   'attribute vec3 aPos; attribute vec3 aNormal; attribute vec4 aColor; uniform mat4 uMVP; varying float vLight; varying vec4 vColor; void main(){gl_Position=uMVP*vec4(aPos,1.0); vec3 n=normalize(aNormal); vLight=0.35+0.65*max(dot(n,normalize(vec3(-0.4,0.8,0.5))),0.0); vColor=aColor;}');
+  const fragmentShader=shader(gl,gl.FRAGMENT_SHADER,
+   'precision mediump float; varying float vLight; varying vec4 vColor; void main(){gl_FragColor=vec4(vColor.rgb*vLight,vColor.a);}');
+  const program=gl.createProgram();
+  gl.attachShader(program,vertexShader);gl.attachShader(program,fragmentShader);gl.linkProgram(program);
+  if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program));
+  gl.useProgram(program);
+  const cubeVertices=[],cubeNormals=[];
+  const faces=[
+   [[-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1],[0,0,1]],
+   [[1,-1,-1],[-1,-1,-1],[-1,1,-1],[1,1,-1],[0,0,-1]],
+   [[-1,1,1],[1,1,1],[1,1,-1],[-1,1,-1],[0,1,0]],
+   [[-1,-1,-1],[1,-1,-1],[1,-1,1],[-1,-1,1],[0,-1,0]],
+   [[1,-1,1],[1,-1,-1],[1,1,-1],[1,1,1],[1,0,0]],
+   [[-1,-1,-1],[-1,-1,1],[-1,1,1],[-1,1,-1],[-1,0,0]]
+  ];
+  for(const face of faces){for(const index of [0,1,2,0,2,3]){cubeVertices.push(...face[index]);cubeNormals.push(...face[4]);}}
+  const gridVertices=[];
+  for(let k=-20;k<=20;k++)gridVertices.push(-20,0,k,20,0,k,k,0,-20,k,0,20);
+  const gridNormals=new Float32Array(gridVertices.length);
+  for(let i=1;i<gridNormals.length;i+=3)gridNormals[i]=1;
+  const gridPositionBuffer=gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER,gridPositionBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(gridVertices),gl.STATIC_DRAW);
+  const gridNormalBuffer=gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER,gridNormalBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER,gridNormals,gl.STATIC_DRAW);
+  const cubeNormalBuffer=gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER,cubeNormalBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(cubeNormals),gl.STATIC_DRAW);
+  const dynamicPositionBuffer=gl.createBuffer();
+  const dynamicColorBuffer=gl.createBuffer();
+  glState={gl,program,cubeVertices:new Float32Array(cubeVertices),gridPositionBuffer,gridNormalBuffer,cubeNormalBuffer,dynamicPositionBuffer,dynamicColorBuffer,gridVertexCount:gridVertices.length/3,cubeNormalData:new Float32Array(cubeNormals),aPos:gl.getAttribLocation(program,'aPos'),aNormal:gl.getAttribLocation(program,'aNormal'),aColor:gl.getAttribLocation(program,'aColor'),uMVP:gl.getUniformLocation(program,'uMVP')};
+  if(!viewportInputsBound){
+   const activePointers=new Map();let pinchDistance=0;
+   canvas.addEventListener('pointerdown',event=>{
+    activePointers.set(event.pointerId,{x:event.clientX,y:event.clientY});
+    try{canvas.setPointerCapture(event.pointerId);}catch{}
+    if(activePointers.size===1){const target=selected();const canTransform=activeTool!=='select'&&target&&target.position;pointer={x:event.clientX,y:event.clientY,id:event.pointerId,moved:false,transform:canTransform?target:null,tool:activeTool,changed:false};if(canTransform)snapshot();}
+    if(activePointers.size===2){const points=[...activePointers.values()];pinchDistance=Math.hypot(points[0].x-points[1].x,points[0].y-points[1].y);if(pointer)pointer.moved=true;}
+   });
+   canvas.addEventListener('pointermove',event=>{
+    if(!activePointers.has(event.pointerId))return;
+    const previous=activePointers.get(event.pointerId),dx=event.clientX-previous.x,dy=event.clientY-previous.y;
+    activePointers.set(event.pointerId,{x:event.clientX,y:event.clientY});
+    if(activePointers.size>=2){const points=[...activePointers.values()],distance=Math.hypot(points[0].x-points[1].x,points[0].y-points[1].y);if(pinchDistance>0)camera.distance=Math.max(5,Math.min(100,camera.distance+(pinchDistance-distance)*0.045));pinchDistance=distance;}
+    else if(pointer){
+     if(Math.abs(dx)+Math.abs(dy)>2)pointer.moved=true;
+     if(pointer.transform){const n=pointer.transform,scale=camera.distance/Math.max(180,canvas.clientHeight);
+      if(pointer.tool==='move'){n.position.x+=dx*scale;n.position.z+=dy*scale;}
+      else if(pointer.tool==='scale'){n.size=n.size||{x:4,y:1,z:2};n.size.x=Math.max(.2,n.size.x+dx*scale);n.size.y=Math.max(.2,n.size.y-dy*scale);}
+      else if(pointer.tool==='rotate'){n.rotation=n.rotation||{x:0,y:0,z:0};n.rotation.y+=dx*.75;n.rotation.x+=dy*.75;}
+      pointer.changed=true;renderInspector();
+     }else{camera.yaw-=dx*0.008;camera.pitch=Math.max(0.12,Math.min(1.45,camera.pitch+dy*0.008));}
+    }
+    if(pointer){pointer.x=event.clientX;pointer.y=event.clientY;}
+    drawViewport();
+   });
+   canvas.addEventListener('pointerup',event=>{
+    const previousCount=activePointers.size;activePointers.delete(event.pointerId);
+    if(previousCount===1&&pointer&&!pointer.moved&&!pointer.transform){const rect=canvas.getBoundingClientRect();pickApprox((event.clientX-rect.left)/rect.width-0.5,(event.clientY-rect.top)/rect.height-0.5);}if(previousCount===1&&pointer&&pointer.transform){if(pointer.changed){markDirty();renderTree();renderInspector();}else if(undoStack.length)undoStack.pop();}
+    if(activePointers.size===0)pointer=null;
+    const points=[...activePointers.values()];pinchDistance=points.length===2?Math.hypot(points[0].x-points[1].x,points[0].y-points[1].y):0;
+   });
+   const cancelPointer=event=>{activePointers.delete(event.pointerId);if(activePointers.size===0){pointer=null;pinchDistance=0;}};
+   canvas.addEventListener('pointercancel',cancelPointer);
+   canvas.addEventListener('lostpointercapture',cancelPointer);
+   canvas.addEventListener('wheel',event=>{event.preventDefault();camera.distance=Math.max(5,Math.min(100,camera.distance+event.deltaY*0.025));drawViewport();},{passive:false});
+   canvas.addEventListener('contextmenu',event=>event.preventDefault());
+   canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();glState=null;$('viewportHud').textContent='WebGL context lost · waiting for restoration';});
+   canvas.addEventListener('webglcontextrestored',()=>{glState=null;initViewport();drawViewport();});
+   window.addEventListener('resize',drawViewport);
+   if('ResizeObserver' in window){viewportResizeObserver=new ResizeObserver(drawViewport);viewportResizeObserver.observe($('scene'));}
+   viewportInputsBound=true;
+  }
+  drawViewport();
+ }catch(error){$('viewportHud').textContent='تعذر تهيئة WebGL: '+error.message;}
+}
+function pickApprox(nx,ny){let list=allNodes().filter(n=>n.position&&['Part','SpawnLocation','MeshPart','WedgePart','UnionOperation'].includes(n.className));if(!list.length)return;let best=list[0],score=Infinity;for(let n of list){let p=n.position,sc=Math.abs(nx-p.x/35)+Math.abs(ny+p.y/35);if(sc<score){score=sc;best=n}}project.selected=best.id;render()}
+function drawViewport(){
+ if(!glState||raf3d)return;
+ raf3d=requestAnimationFrame(()=>{raf3d=0;renderViewportFrame();});
+}
+function renderViewportFrame(){
+ if(!glState)return;
+ const state=glState,{gl,program}=state,canvas=$('viewport3d');
+ const width=Math.max(1,canvas.clientWidth),height=Math.max(1,canvas.clientHeight),dpr=Math.min(2,window.devicePixelRatio||1);
+ if(canvas.width!==Math.floor(width*dpr)||canvas.height!==Math.floor(height*dpr)){canvas.width=Math.floor(width*dpr);canvas.height=Math.floor(height*dpr);}
+ gl.viewport(0,0,canvas.width,canvas.height);
+ gl.enable(gl.DEPTH_TEST);gl.enable(gl.CULL_FACE);gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
+ gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.useProgram(program);
+ const cp=Math.cos(camera.pitch),eye=[camera.target[0]+camera.distance*cp*Math.sin(camera.yaw),camera.target[1]+camera.distance*Math.sin(camera.pitch),camera.target[2]+camera.distance*cp*Math.cos(camera.yaw)];
+ const viewProjection=mul4(mat4Perspective(0.78,width/height,0.1,500),mat4LookAt(eye,camera.target,[0,1,0]));
+ gl.uniformMatrix4fv(state.uMVP,false,new Float32Array(viewProjection));
+ // Grid pass: static geometry and a constant muted colour.
+ gl.bindBuffer(gl.ARRAY_BUFFER,state.gridPositionBuffer);gl.enableVertexAttribArray(state.aPos);gl.vertexAttribPointer(state.aPos,3,gl.FLOAT,false,0,0);
+ gl.bindBuffer(gl.ARRAY_BUFFER,state.gridNormalBuffer);gl.enableVertexAttribArray(state.aNormal);gl.vertexAttribPointer(state.aNormal,3,gl.FLOAT,false,0,0);
+ gl.disableVertexAttribArray(state.aColor);gl.vertexAttrib4f(state.aColor,0.18,0.28,0.38,0.55);
+ gl.drawArrays(gl.LINES,0,state.gridVertexCount);
+ // Batch every box into two dynamic buffers and issue one triangles draw call.
+ const renderableClasses=new Set(['Part','SpawnLocation','MeshPart','WedgePart','UnionOperation']);
+ const allParts=allNodes().filter(node=>node.position&&renderableClasses.has(node.className));
+ const renderLimit=5000,nodes=allParts.slice(0,renderLimit),verticesPerPart=state.cubeVertices.length/3;
+ if(nodes.length){
+  const positions=new Float32Array(nodes.length*verticesPerPart*3),colors=new Float32Array(nodes.length*verticesPerPart*4);
+  let positionOffset=0,colorOffset=0;
+  for(const node of nodes){
+   const position=node.position,size=node.size||{x:4,y:1,z:2};
+   const sx=Math.max(0.01,Number(size.x)||1)*0.5,sy=Math.max(0.01,Number(size.y)||1)*0.5,sz=Math.max(0.01,Number(size.z)||1)*0.5;
+   const rotation=node.rotation||{x:0,y:0,z:0};
+   const rx=(Number(rotation.x)||0)*Math.PI/180,ry=(Number(rotation.y)||0)*Math.PI/180,rz=(Number(rotation.z)||0)*Math.PI/180;
+   const cy=Math.cos(ry),syy=Math.sin(ry),cx=Math.cos(rx),sxx=Math.sin(rx),cz=Math.cos(rz),szz=Math.sin(rz);
+   const hex=node.id===project.selected?'#ffb454':(node.color||'#4d9cff');
+   const match=/^#?([0-9a-f]{6})$/i.exec(String(hex)),rgb=match?[parseInt(match[1].slice(0,2),16)/255,parseInt(match[1].slice(2,4),16)/255,parseInt(match[1].slice(4,6),16)/255]:[0.30,0.61,0.95];
+   const alpha=Math.max(0,Math.min(1,1-(Number(node.transparency)||0)));
+   for(let i=0;i<state.cubeVertices.length;i+=3){
+    let vx=state.cubeVertices[i]*sx,vy=state.cubeVertices[i+1]*sy,vz=state.cubeVertices[i+2]*sz;
+    let tx=vx*cy-vz*syy,tz=vx*syy+vz*cy;vx=tx;vz=tz;
+    let ty=vy*cx-vz*sxx;tz=vy*sxx+vz*cx;vy=ty;vz=tz;
+    tx=vx*cz-vy*szz;ty=vx*szz+vy*cz;vx=tx;vy=ty;
+    positions[positionOffset++]=Number(position.x||0)+vx;
+    positions[positionOffset++]=Number(position.y||0)+vy;
+    positions[positionOffset++]=Number(position.z||0)+vz;
+    colors[colorOffset++]=rgb[0];colors[colorOffset++]=rgb[1];colors[colorOffset++]=rgb[2];colors[colorOffset++]=alpha;
+   }
+  }
+  gl.bindBuffer(gl.ARRAY_BUFFER,state.dynamicPositionBuffer);gl.bufferData(gl.ARRAY_BUFFER,positions,gl.DYNAMIC_DRAW);
+  gl.enableVertexAttribArray(state.aPos);gl.vertexAttribPointer(state.aPos,3,gl.FLOAT,false,0,0);
+  gl.bindBuffer(gl.ARRAY_BUFFER,state.cubeNormalBuffer);gl.enableVertexAttribArray(state.aNormal);gl.vertexAttribPointer(state.aNormal,3,gl.FLOAT,false,0,0);
+  gl.bindBuffer(gl.ARRAY_BUFFER,state.dynamicColorBuffer);gl.bufferData(gl.ARRAY_BUFFER,colors,gl.DYNAMIC_DRAW);
+  gl.enableVertexAttribArray(state.aColor);gl.vertexAttribPointer(state.aColor,4,gl.FLOAT,false,0,0);
+  gl.drawArrays(gl.TRIANGLES,0,nodes.length*verticesPerPart);
+ }
+ const suffix=allParts.length>renderLimit?` · showing ${renderLimit}/${allParts.length}`:'';
+ $('viewportHud').textContent=`3D Viewport · ${nodes.length} Parts${suffix} · ${camera.distance.toFixed(1)} studs`;
+}
+
+function renderScene(){if(!glState)initViewport();drawViewport();$('selectionLabel').textContent=selected()?selected().name+' · '+selected().className:'لا يوجد تحديد';}
+function inputField(label,key,value,type='text'){return `<div class="field"><label>${label}</label><input data-key="${key}" type="${type}" value="${String(value??'').replace(/&/g,'&amp;').replace(/"/g,'&quot;')}" /></div>`}
+function tripleField(label,key,obj){return `<div class="field"><label>${label}</label><div class="triple">${['x','y','z'].map(k=>`<input type="number" step="0.1" data-vector="${key}" data-axis="${k}" value="${obj?.[k]??0}" aria-label="${label} ${k}"/>`).join('')}</div></div>`}
+function renderInspector(){let n=selected(),el=$('inspector');if($('propertyClass'))$('propertyClass').textContent=n?n.className+' · '+n.name:'No selection';if(!n){el.innerHTML='<div class="empty">حدد عنصراً من Explorer لعرض خصائصه.</div>';return;}
+if(activeRight==='attributes'){let entries=Object.entries(n.attributes||{});el.innerHTML='<div class="props"><div class="prop-group"><div class="prop-title">Attributes</div>'+entries.map(([k,v],i)=>`<div class="field"><label>${k}</label><input data-attr="${k.replace(/&/g,'&amp;').replace(/"/g,'&quot;')}" value="${String(v).replace(/&/g,'&amp;').replace(/"/g,'&quot;')}"/></div>`).join('')+'<button id="addAttr">＋ إضافة Attribute</button></div><div class="prop-group"><div class="prop-title">Tags</div><div>'+((n.tags||[]).join(', ')||'لا توجد Tags')+'</div><button id="addTag">＋ إضافة Tag</button></div></div>';el.querySelectorAll('[data-attr]').forEach(inp=>inp.onchange=()=>{snapshot();n.attributes[inp.dataset.attr]=inp.value;markDirty()});$('addAttr').onclick=()=>{modal('Attribute جديد','<input id="attrName" placeholder="Name"/><input id="attrValue" placeholder="Value"/>',()=>{let k=$('attrName').value.trim();if(k){snapshot();n.attributes[k]=$('attrValue').value;renderInspector()}})};$('addTag').onclick=()=>{modal('Tag جديد','<input id="tagName" placeholder="Tag"/>',()=>{let v=$('tagName').value.trim();if(v){snapshot();n.tags.push(v);renderInspector()}})};return;}
+el.innerHTML=`<div class="props"><div class="prop-group"><div class="prop-title">الهوية</div>${inputField('Name','name',n.name)}${inputField('Class','className',n.className)}${inputField('Parent','_parentName',getParent(n.id)?.name||'nil')}${inputField('FullName','_fullName',getFullName(n.id))}<div class="field"><label>Archivable</label><input type="checkbox" data-key="archivable" ${n.archivable!==false?'checked':''}/></div></div><div class="prop-group"><div class="prop-title">Transform</div>${tripleField('Position','position',n.position||{x:0,y:0,z:0})}${tripleField('Size','size',n.size||{x:4,y:2,z:4})}${tripleField('Orientation','rotation',n.rotation||{x:0,y:0,z:0})}</div><div class="prop-group"><div class="prop-title">Appearance</div>${inputField('Color','color',n.color||'#4d9cff','color')}<div class="field"><label>Transparency</label><input data-key="transparency" type="number" min="0" max="1" step="0.05" value="${n.transparency??0}"/></div></div><div class="prop-group"><div class="prop-title">Behavior</div><label class="check"><input type="checkbox" data-key="anchored" ${n.anchored!==false?'checked':''}/> Anchored</label><label class="check"><input type="checkbox" data-key="canCollide" ${n.canCollide!==false?'checked':''}/> CanCollide</label>${inputField('Material','material',n.material||'Plastic')}</div><div class="prop-group"><button class="danger" id="deleteSelected">حذف العنصر</button> <button id="renameSelected">إعادة تسمية</button></div></div>`;
+el.querySelectorAll('[data-key]').forEach(inp=>{inp.addEventListener('change',()=>{snapshot();let k=inp.dataset.key;if(k==='_fullName'||k==='_parentName')return;let v=inp.type==='checkbox'?inp.checked:inp.type==='number'?Number(inp.value):inp.value;n[k]=v;renderTree();renderScene()})});el.querySelectorAll('[data-vector]').forEach(inp=>inp.addEventListener('change',()=>{snapshot();let k=inp.dataset.vector;n[k]=n[k]||{x:0,y:0,z:0};n[k][inp.dataset.axis]=Number(inp.value);renderScene()}));$('deleteSelected').onclick=deleteSelected;$('renameSelected').onclick=()=>renameSelected();}
+function addNode(className,parentId){const defaultParent=({Script:'serverscripts',LocalScript:'starterPlayer',ModuleScript:'replicated',ScreenGui:'starterGui',Frame:'starterGui',TextLabel:'starterGui',TextButton:'starterGui',Accessory:'starterPack'})[className]||'workspace';let p=find(parentId||defaultParent)||find('workspace');if(!p.node.children)p.node.children=[];snapshot();let n={id:uid(),name:className,className,children:[],expanded:true,attributes:{},tags:[],archivable:true,...clone(CLASS_DEFAULTS[className]||{})};if(['Part','SpawnLocation','Model','MeshPart','WedgePart','UnionOperation'].includes(className)&&n.position){n.position={x:Math.round(Math.random()*8-4),y:2,z:Math.round(Math.random()*8-4)};n.rotation=n.rotation||{x:0,y:0,z:0};}p.node.children.push(n);p.node.expanded=true;project.selected=n.id;if(className.includes('Script')){currentScript=n.id;switchView('script')}render();toast(className+' تمت إضافته');}
+function deleteSelected(){let f=find(project.selected);if(!f||!f.parent){toast('لا يمكن حذف الجذر');return;}snapshot();f.arr.splice(f.arr.findIndex(x=>x.id===project.selected),1);project.selected=f.parent.id;render();toast('تم حذف العنصر')}
+function renameSelected(){let n=selected();if(!n)return;modal('إعادة تسمية',`<input id="modalInput" value="${n.name.replace(/"/g,'&quot;')}"/>`,()=>{let v=$('modalInput').value.trim();if(v){snapshot();n.name=v;render();toast('تم تغيير الاسم')}})}
+function openContext(){modal('إجراءات العنصر',`<div style="display:grid;gap:7px"><button id="ctxRename">إعادة تسمية</button><button id="ctxPart">إضافة Part داخله</button><button id="ctxFolder">إضافة Folder داخله</button><button id="ctxDelete" class="danger">حذف</button></div>`,()=>{});$('modalAction').classList.add('hidden');$('ctxRename').onclick=()=>{closeModal();renameSelected()};$('ctxPart').onclick=()=>{let id=project.selected;closeModal();addNode('Part',id)};$('ctxFolder').onclick=()=>{let id=project.selected;closeModal();addNode('Folder',id)};$('ctxDelete').onclick=()=>{closeModal();deleteSelected()}}
+function modal(title,content,action){$('modalTitle').textContent=title;$('modalContent').innerHTML=content;$('modalBack').style.display='flex';$('modalAction').classList.remove('hidden');$('modalAction').onclick=()=>{action?.();closeModal()};}function closeModal(){$('modalBack').style.display='none';}
+function switchView(v){activeView=v;$('centerPanel').classList.toggle('editor-mode',v==='script');$('editor').classList.toggle('open',v==='script');$('scene').style.display=v==='script'?'none':'';$('output').classList.toggle('open',v==='output');$('centerTitle').textContent=v==='script'?'Script Editor':v==='output'?'Output':'Viewport';document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));if(v==='script'){loadScript();updateCodeChrome();}}
+function loadScript(){let n=find(currentScript)?.node;if(!n||!n.className.includes('Script')){n=selected();if(n&&n.className.includes('Script'))currentScript=n.id;}n=find(currentScript)?.node;if(n){$('scriptTitle').textContent=n.name;$('codeArea').value=n.source||'-- اكتب Luau هنا\n'}else{$('scriptTitle').textContent='No Script Selected';$('codeArea').value='-- حدد Script من Explorer\n'}}
+$('codeArea').addEventListener('input',()=>{let n=find(currentScript)?.node;if(n){n.source=$('codeArea').value;markDirty()}});
+function safeStorageGet(key){try{return window.localStorage.getItem(key)}catch(e){return null}}function safeStorageSet(key,value){try{window.localStorage.setItem(key,value);return true}catch(e){return false}}function saveLocal(){normalizeProject(project);let ok=safeStorageSet('studioMobileProject',JSON.stringify(project));$('saveStatus').textContent=ok?'● محفوظ محلياً':'● تعذر التخزين المحلي';$('saveStatus').style.color=ok?'var(--green)':'var(--orange)';toast(ok?'تم الحفظ على هذا الجهاز':'التخزين المحلي غير متاح؛ استخدم تصدير المشروع')}
+function xmlEscape(v){return String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function xmlProp(name,type,value){if(type==='Vector3')return `<Vector3 name="${name}"><X>${value?.x||0}</X><Y>${value?.y||0}</Y><Z>${value?.z||0}</Z></Vector3>`;if(type==='Color3'){let h=value||'#4d9cff';return `<Color3 name="${name}"><R>${parseInt(h.slice(1,3),16)/255}</R><G>${parseInt(h.slice(3,5),16)/255}</G><B>${parseInt(h.slice(5,7),16)/255}</B></Color3>`}if(type==='bool')return `<bool name="${name}">${value?'true':'false'}</bool>`;if(type==='float'||type==='double')return `<${type} name="${name}">${Number(value)||0}</${type}>`;return `<string name="${name}">${xmlEscape(value)}</string>`}
+function nodeToXml(n){let props=xmlProp('Name','string',n.name)+xmlProp('Archivable','bool',n.archivable!==false);if(n.position)props+=xmlProp('Position','Vector3',n.position);if(n.size)props+=xmlProp('Size','Vector3',n.size);if(n.rotation)props+=xmlProp('Orientation','Vector3',n.rotation);if(n.color)props+=xmlProp('Color3','Color3',n.color);if(n.anchored!==undefined)props+=xmlProp('Anchored','bool',n.anchored);if(n.material)props+=xmlProp('Material','string',n.material);if(n.transparency!==undefined)props+=xmlProp('Transparency','float',n.transparency);if(n.source!==undefined)props+=`<ProtectedString name="Source">${xmlEscape(n.source)}</ProtectedString>`;return `<Item class="${xmlEscape(n.className)}" referent="${xmlEscape(n.id)}"><Properties>${props}</Properties>${(n.children||[]).map(nodeToXml).join('')}</Item>`}
+function exportRbxmx(){let xml='<?xml version="1.0" encoding="utf-8"?><roblox version="4">'+project.root.map(nodeToXml).join('')+'</roblox>',filename=(project.name||'model')+'.rbxmx';if(window.AndroidBridge&&typeof window.AndroidBridge.exportFile==='function'){window.AndroidBridge.exportFile(filename,xml,'application/xml');toast('اختر مكان حفظ RBXMX');return}downloadBlob(xml,filename,'application/xml')}
+function downloadBlob(data,name,type){let blob=new Blob([data],{type}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1500)}
+function parseVector(el){return {x:Number(el.querySelector('X')?.textContent||0),y:Number(el.querySelector('Y')?.textContent||0),z:Number(el.querySelector('Z')?.textContent||0)}}
+function xmlItemToNode(item){let cls=item.getAttribute('class')||'Folder',p=item.querySelector(':scope > Properties'),get=(tag,name)=>p?.querySelector(`${tag}[name="${name}"]`)?.textContent;let n={id:(item.getAttribute('referent')||uid()).replace(/[^a-zA-Z0-9_-]/g,'_'),name:get('string','Name')||cls,className:cls,children:[],attributes:{},tags:[],expanded:true,archivable:get('bool','Archivable')!=='false'};for(let key of ['Position','Size','Orientation']){let e=p?.querySelector(`Vector3[name="${key}"]`);if(e)n[key==='Orientation'?'rotation':key.toLowerCase()]=parseVector(e)}let c=p?.querySelector('Color3[name="Color3"]');if(c){let rgb=['R','G','B'].map(k=>Math.max(0,Math.min(255,Math.round(Number(c.querySelector(k)?.textContent||0)*255))));n.color='#'+rgb.map(x=>x.toString(16).padStart(2,'0')).join('')}n.material=get('string','Material')||'Plastic';for(let [prop,tag] of [['anchored','Anchored'],['transparency','Transparency']]){let v=get(prop==='anchored'?'bool':'float',tag);if(v!==undefined)n[prop]=prop==='anchored'?v==='true':Number(v)}n.source=get('ProtectedString','Source')||get('string','Source');for(let child of Array.from(item.children).filter(x=>x.tagName==='Item'))n.children.push(xmlItemToNode(child));return n}
+function parseRbxmx(text){let doc=new DOMParser().parseFromString(text,'application/xml');if(doc.querySelector('parsererror'))throw Error('ملف XML غير صالح');let items=Array.from(doc.documentElement.children).filter(x=>x.tagName==='Item');if(!items.length)throw Error('لا توجد عناصر Item مدعومة');return {name:'Imported Roblox Model',version:1,root:items.map(xmlItemToNode),selected:null}}
+function exportProject(){let payload=JSON.stringify({format:'StudioMobileProject',version:2,project},null,2);let filename=(project.name.replace(/[^\w\-]+/g,'_')||'project')+'.studiojson';if(window.AndroidBridge&&typeof window.AndroidBridge.exportProject==='function'){window.AndroidBridge.exportProject(filename,payload);toast('اختر مكان حفظ المشروع');return;}downloadBlob(payload,filename,'application/json')}
+
+function importProject(file){let r=new FileReader();r.onload=()=>{try{let text=r.result,p;if(/\.rbxmx$|\.rbxlx$/i.test(file.name)||String(text).trim().startsWith('<?xml')||String(text).includes('<roblox'))p=parseRbxmx(text);else{let data=JSON.parse(text);p=data.project||data;if(!Array.isArray(p.root))throw new Error('صيغة المشروع غير صحيحة')}snapshot();project=normalizeProject(p);render();saveLocal();toast('تم فتح المشروع')}catch(e){toast('تعذر فتح الملف: '+e.message)}};r.readAsText(file)}
+let luauRequestCounter=0,activeLuauRequest=null;
+window.StudioMobile=window.StudioMobile||{};
+window.StudioMobile.onLuauResult=(requestId,result)=>{if(requestId!==activeLuauRequest)return;activeLuauRequest=null;let out=$('outputBody');out.textContent=String(result??'');out.style.whiteSpace='pre-wrap';out.scrollTop=out.scrollHeight;$('output').classList.add('open');};
+
+// Studio ribbon, local Toolbox, mobile dock navigation, and editor ergonomics.
+let activeTool='select';
+function setActiveTool(tool,silent=false){activeTool=tool;document.querySelectorAll('[data-tool]').forEach(b=>b.classList.toggle('active',b.dataset.tool===tool));if(!silent)toast(tool[0].toUpperCase()+tool.slice(1)+' tool · drag a selected object to transform');}
+function selectRibbon(name){document.querySelectorAll('[data-ribbon]').forEach(b=>b.classList.toggle('active',b.dataset.ribbon===name));document.querySelectorAll('[data-toolbar]').forEach(b=>b.hidden=b.dataset.toolbar!==name);}
+document.querySelectorAll('[data-ribbon]').forEach(b=>b.onclick=()=>selectRibbon(b.dataset.ribbon));
+document.querySelectorAll('[data-tool]').forEach(b=>b.onclick=()=>setActiveTool(b.dataset.tool));
+document.querySelectorAll('[data-insert]').forEach(b=>b.onclick=()=>addNode(b.dataset.insert));
+document.querySelectorAll('[data-panel]').forEach(b=>b.onclick=()=>{
+ const v=b.dataset.panel;
+ if(b.closest('.mobile-nav'))document.querySelectorAll('.mobile-nav button').forEach(x=>x.classList.toggle('active',x===b));
+ $('leftPanel').classList.remove('show-mobile');$('rightPanel').classList.remove('show-mobile','mobile-focus-explorer','mobile-focus-properties');
+ if(v==='scene'){switchView('scene');return;}if(v==='script'){switchView('script');return;}
+ if(v==='output'){switchView('output');return;}
+ if(v==='toolbox'){$('leftPanel').classList.add('show-mobile');return;}
+ if(v==='explorer'||v==='properties'){$('rightPanel').classList.add('show-mobile','mobile-focus-'+v);return;}
+});
+document.querySelectorAll('[data-hide-panel]').forEach(b=>b.onclick=()=>$(b.dataset.hidePanel).classList.remove('show-mobile'));
+document.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('click',()=>{
+ const a=b.dataset.action;const n=selected();
+ if(a==='new'){$('menuBtn').click();return;}if(a==='open'){$('openFile').click();return;}if(a==='save'){saveLocal();return;}if(a==='export'){exportProject();return;}if(a==='run'){switchView('script');runSelectedScript();return;}if(a==='play'){$('playBtn').click();return;}if(a==='stop'){toast('Preview stopped. No live Roblox simulation is available.');return;}if(a==='format'){$('formatBtn').click();switchView('script');return;}if(a==='build-rig'){toast('Avatar rig generation requires the Roblox Engine');return;}if(a==='zoom-in'){camera.distance=Math.max(5,camera.distance*.88);drawViewport();return;}if(a==='zoom-out'){camera.distance=Math.min(100,camera.distance*1.12);drawViewport();return;}if(a==='reset-camera'){camera={yaw:.72,pitch:.62,distance:24,target:[0,2,0]};drawViewport();return;}
+ if(a==='anchor'){if(n){snapshot();n.anchored=n.anchored===false;renderInspector();renderScene();toast(n.anchored?'Anchored':'Unanchored');}return;}
+ if(a==='color'){if(n){activeRight='properties';renderInspector();const x=$('inspector').querySelector('[data-key="color"]');x?.click();toast('Change Color in Properties');}else toast('Select a Part first');return;}
+ if(a==='material'){if(n){snapshot();n.material=n.material==='Neon'?'Plastic':'Neon';renderInspector();renderScene();toast('Material: '+n.material);}return;}
+ if(a==='group'){const f=find(project.selected);if(f&&f.parent){snapshot();const model={id:uid(),name:'Model',className:'Model',children:[f.node],expanded:true,attributes:{},tags:[]};f.arr.splice(f.arr.indexOf(f.node),1);f.arr.push(model);project.selected=model.id;render();toast('Grouped into Model');}return;}
+ if(a==='ungroup'){const f=find(project.selected);if(f&&f.node.className==='Model'&&f.parent){snapshot();const index=f.arr.indexOf(f.node);f.arr.splice(index,1,...f.node.children);project.selected=f.parent.id;render();toast('Model ungrouped');}return;}
+ if(a==='align'){if(n?.position){snapshot();n.position.x=Math.round(n.position.x);n.position.y=Math.round(n.position.y);n.position.z=Math.round(n.position.z);renderInspector();renderScene();toast('Aligned to grid');}return;}
+ if(a==='collision'){if(n){snapshot();n.canCollide=n.canCollide===false;renderInspector();toast('CanCollide: '+n.canCollide);}return;}
+ if(a==='join'||a==='animation'){toast(a+' requires full Roblox Engine support and is unavailable in preview');return;}
+}));
+$('toolboxSearch')?.addEventListener('input',()=>{const q=$('toolboxSearch').value.toLowerCase();$('toolboxResults').querySelectorAll('.asset-tile').forEach(el=>el.style.display=el.textContent.toLowerCase().includes(q)?'flex':'none')});
+$('treeFilter')?.addEventListener('input',()=>{const q=$('treeFilter').value.toLowerCase();$('tree').querySelectorAll('.tree-row').forEach(el=>el.style.display=el.textContent.toLowerCase().includes(q)?'flex':'none')});
+$('expandTree')?.addEventListener('click',()=>{for(const n of allNodes())n.expanded=true;renderTree()});$('explorerAdd')?.addEventListener('click',()=>addNode('Part'));
+document.querySelectorAll('[data-toolbox-category]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-toolbox-category]').forEach(x=>x.classList.toggle('active',x===b));if(b.dataset.toolboxCategory!=='Models')toast(b.dataset.toolboxCategory+' are not connected in this local toolbox');});
+$('clearOutput')?.addEventListener('click',()=>{$('outputBody').innerHTML=''});$('collapseOutput')?.addEventListener('click',()=>{$('output').classList.toggle('open')});
+$('codeArea')?.addEventListener('input',updateCodeChrome);
+$('codeArea')?.addEventListener('scroll',()=>{if($('codeHighlight')){$('codeHighlight').scrollTop=$('codeArea').scrollTop;$('codeHighlight').scrollLeft=$('codeArea').scrollLeft;}if($('lineNumbers'))$('lineNumbers').scrollTop=$('codeArea').scrollTop;});
+$('codeArea')?.addEventListener('click',updateCursorStatus);$('codeArea')?.addEventListener('keyup',updateCursorStatus);
+$('codeArea')?.addEventListener('keydown',e=>{
+ const ta=e.currentTarget;
+ if(e.key==='Tab'){e.preventDefault();const s=ta.selectionStart,end=ta.selectionEnd;ta.setRangeText('    ',s,end,'end');ta.dispatchEvent(new Event('input'));return;}
+ if(e.key==='Enter'){e.preventDefault();const s=ta.selectionStart,line=ta.value.slice(0,s).split('\n').pop(),indent=(line.match(/^\s*/)||[''])[0]+(/\bthen\s*$|\bdo\s*$|function\b.*\)\s*$/.test(line.trim())?'    ':'');ta.setRangeText('\n'+indent,s,ta.selectionEnd,'end');ta.dispatchEvent(new Event('input'));}
+});
+function updateCursorStatus(){const ta=$('codeArea');if(!ta)return;const before=ta.value.slice(0,ta.selectionStart),line=before.split('\n').length,col=before.length-before.lastIndexOf('\n');$('cursorPosition').textContent='Ln '+line+', Col '+col;}
+function highlightLuau(source){const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');let text=esc(source);const tokens=[];text=text.replace(/(--[^\n]*|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\b(?:local|function|end|if|then|else|elseif|for|while|repeat|until|return|break|continue|and|or|not|true|false|nil|in|do)\b|\b\d+(?:\.\d+)?\b|\b(?:game|workspace|script|Instance|Vector2|Vector3|CFrame|Color3|UDim2|Enum|task|math|string|table)\b)/g,(m)=>{let cls=m.startsWith('--')?'comment':m[0]==='"'||m[0]==="'"?'string':/^(local|function|end|if|then|else|elseif|for|while|repeat|until|return|break|continue|and|or|not|true|false|nil|in|do)$/.test(m)?'key':/^\d/.test(m)?'number':'api';const k='§TOK'+tokens.length+'§';tokens.push('<span class="tok-'+cls+'">'+m+'</span>');return k;});tokens.forEach((v,i)=>text=text.replace('§TOK'+i+'§',v));return text+'\n';}
+function updateCodeChrome(){const ta=$('codeArea');if(!ta)return;const lines=ta.value.split('\n').length;$('lineNumbers').textContent=Array.from({length:lines},(_,i)=>i+1).join('\n');$('codeHighlight').innerHTML=highlightLuau(ta.value);$('codeHighlight').scrollTop=ta.scrollTop;$('codeHighlight').scrollLeft=ta.scrollLeft;updateCursorStatus();}
+updateCodeChrome();$('runtimeStatus').textContent=window.AndroidBridge&&AndroidBridge.isLuauAvailable()?'Luau VM · Native':'Luau runtime unavailable';
+
+function runSelectedScript(){if(activeLuauRequest!==null){toast('A Luau script is already running');return;}let n=find(currentScript)?.node;if(!n||!String(n.className).includes('Script'))n=selected();let src=n?.source||$('codeArea').value||'';$('output').classList.add('open');$('outputBody').textContent='Compiling and running Luau preview…';if(window.AndroidBridge&&typeof window.AndroidBridge.runLuauAsync==='function'){activeLuauRequest='luau-'+(++luauRequestCounter);window.AndroidBridge.runLuauAsync(src,activeLuauRequest)}else{$('outputBody').textContent='[Luau Runtime] Native Luau library is not built into this Android app.';}}
+$('saveBtn').onclick=saveLocal;$('playBtn').onclick=()=>{toast('Playtest needs the Roblox Engine. Run scripts from the Script ribbon.');};
+$('addPart').onclick=()=>addNode('Part');$('addFolder').onclick=()=>addNode('Folder');$('addScript').onclick=()=>addNode('Script');$('insertPart').onclick=()=>addNode('Part');$('insertSpawn').onclick=()=>addNode('SpawnLocation');$('insertModel').onclick=()=>addNode('Model');$('undoBtn').onclick=()=>{if(!undoStack.length)return;redoStack.push(clone(project));project=undoStack.pop();render();toast('تراجع')};$('redoBtn').onclick=()=>{if(!redoStack.length)return;undoStack.push(clone(project));project=redoStack.pop();render();toast('إعادة')};$('zoomIn').onclick=()=>{camera.distance=Math.max(5,camera.distance*.88);drawViewport()};$('zoomOut').onclick=()=>{camera.distance=Math.min(100,camera.distance*1.12);drawViewport()};$('resetView').onclick=()=>{camera={yaw:.72,pitch:.62,distance:24,target:[0,2,0]};drawViewport()};$('focusBtn').onclick=()=>{let n=selected();if(n?.position){camera.target=[n.position.x,n.position.y,n.position.z];drawViewport();toast('تم التركيز على '+n.name)}};
+document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>switchView(b.dataset.view));document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{activeRight=b.dataset.tab;document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x===b));renderInspector()});
+
+$('menuBtn').onclick=()=>modal('قائمة المشروع',`<div style="display:grid;gap:8px"><button id="newProject">مشروع جديد</button><button id="openProject">فتح مشروع JSON أو RBXMX أو RBXLX</button><button id="exportProject">تصدير مشروع Studio JSON</button><button id="exportRbxmx">تصدير نموذج RBXMX</button><button id="aboutApp">حول Studio Mobile</button></div>`,()=>{});$('modalAction').classList.add('hidden');
+$('modalCancel').onclick=closeModal;
+$('modalContent').addEventListener('click',e=>{let id=e.target.id;if(id==='newProject'){closeModal();modal('مشروع جديد','<input id="newName" value="New Experience"/>',()=>{snapshot();project=sample();project.name=$('newName').value||'New Experience';project.selected='workspace';render();saveLocal()})}if(id==='openProject'){closeModal();$('openFile').click()}if(id==='exportProject'){closeModal();exportProject()}if(id==='exportRbxmx'){closeModal();exportRbxmx()}if(id==='aboutApp'){modal('حول التطبيق','<p>نموذج محرر مستقل للهاتف، مستوحى من سير عمل أدوات البناء. لا يحتوي محرك Roblox ولا يشغّل التجارب الحقيقية.</p>',()=>{})}});
+$('openFile').onchange=e=>{if(e.target.files[0])importProject(e.target.files[0]);e.target.value=''};
+$('formatBtn').onclick=()=>{let t=$('codeArea').value.replace(/\t/g,'    ').replace(/[ ]+$/gm,'');$('codeArea').value=t;let n=find(currentScript)?.node;if(n)n.source=t;toast('تم تنظيف المسافات الزائدة')};
+let saved=safeStorageGet('studioMobileProject');if(saved){try{let p=JSON.parse(saved);if(Array.isArray(p.root))project=normalizeProject(p);}catch{}}render();switchView('scene');selectRibbon('home');setActiveTool('select',true);setTimeout(initViewport,80);
+})();
 </script></body></html>
