@@ -68,6 +68,8 @@ jobs:
           test -f app/src/main/assets/roblox_compat.luau
           test -f app/src/main/cpp/native_luau.cpp
           test -f app/src/main/java/com/studiomobile/app/MainActivity.java
+          node --check tests/stage14_ui_smoke.js
+          node tests/stage14_ui_smoke.js
           python3 - <<'PY'
           import xml.etree.ElementTree as ET
           ET.parse('app/src/main/AndroidManifest.xml')
