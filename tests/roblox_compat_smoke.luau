@@ -8,6 +8,8 @@ part.Parent=folder
 part:SetAttribute("Build",9)
 assert(part:IsA("BasePart"))
 assert(folder:FindFirstChild("SmokePart")==part)
+assert(folder.SmokePart==part)
+assert(workspace.SmokeFolder==folder)
 assert(part:GetAttribute("Build")==9)
 assert(part:GetFullName()=="Workspace.SmokeFolder.SmokePart")
 assert(workspace:GetFullName()=="Workspace")

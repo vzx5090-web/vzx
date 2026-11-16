@@ -424,7 +424,14 @@ InstanceMT.__index=function(self,key)
     if key=="TouchEnded" then return rawget(self,"_touchEnded") end
     local props=rawget(self,"_props")
     if props and props[key]~=nil then return props[key] end
-    return InstanceMethods[key] or rawget(self,key)
+    local method=InstanceMethods[key]
+    if method~=nil then return method end
+    local direct=rawget(self,key)
+    if direct~=nil then return direct end
+    for _,child in ipairs(rawget(self,"_children") or {}) do
+        if child.Name==key then return child end
+    end
+    return nil
 end
 InstanceMT.__newindex=function(self,key,value)
     if key=="Parent" then
