@@ -112,3 +112,9 @@ child.Name="AddedChild"
 child.Parent=folder
 assert(fired)
 print("ROBLOX_COMPAT_SMOKE_OK",part:GetFullName())
+
+local sceneJson=__StudioMobileExportScene()
+assert(string.find(sceneJson,"SmokePart",1,true))
+assert(string.find(sceneJson,"FF4000",1,true) or string.find(sceneJson,"Color3",1,true))
+assert(string.find(sceneJson,"Workspace",1,true)==nil)
+print("ROBLOX_SCENE_EXPORT_OK")

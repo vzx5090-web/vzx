@@ -14,7 +14,8 @@
 /* Three dock workspace */
 .main{min-height:0;flex:1;display:grid;grid-template-columns:205px minmax(230px,1fr) 285px;gap:4px;padding:4px;background:#11151b;direction:ltr}.panel{background:var(--panel);border:1px solid #343a43;border-radius:3px;min-height:0;overflow:hidden;display:flex;flex-direction:column}.panel-head{height:29px;min-height:29px;display:flex;align-items:center;justify-content:space-between;padding:0 8px;border-bottom:1px solid #383e48;font-size:11px;font-weight:700;background:#292e36}.panel-head small{color:var(--muted);font-weight:400;font-size:10px}.panel-body{overflow:auto;min-height:0;flex:1;padding:7px}.tree-tools{display:flex;gap:3px;padding:5px;border-bottom:1px solid var(--line)}.tree-tools button{flex:1;padding:4px 2px;min-height:27px;font-size:10px}.tree-row{display:flex;align-items:center;gap:5px;padding:4px 5px;border-radius:2px;min-height:25px;cursor:pointer;user-select:none;font-size:11px}.tree-row:hover{background:#2b333e}.tree-row.selected{background:#174d77;outline:1px solid #2386cd}.tree-row .twisty{width:12px;color:#a8b3c2;font-size:10px}.tree-row .node-icon{width:16px;text-align:center}.tree-row .node-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}.tree-row .class-tag{font-size:8px;color:#8994a3}
 .leftpanel{display:flex}.toolbox-search{padding:6px;border-bottom:1px solid var(--line);display:flex;gap:4px}.toolbox-search input{min-width:0;padding:6px 8px;font-size:11px;background:#15191f;border:1px solid #424a55;border-radius:3px;color:var(--text)}.toolbox-tabs{display:flex;border-bottom:1px solid var(--line)}.toolbox-tabs button{flex:1;border:0;border-radius:0;background:transparent;min-height:28px;padding:4px 3px;font-size:10px}.toolbox-tabs button.active{border-bottom:2px solid var(--blue2);color:#fff}.toolbox-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:7px}.asset-tile{min-height:68px;border:1px solid #3b4350;background:#272d36;border-radius:3px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;padding:7px 4px;font-size:10px;color:#d5dce6;text-align:center}.asset-tile .asset-icon{font-size:23px;color:#80caff}.asset-tile:active{background:#194c72}.toolbox-note{padding:8px;color:#8994a3;font-size:10px;line-height:1.4}
-.center{position:relative;background:#11161e;border:1px solid #343a43;border-radius:3px;overflow:hidden;min-height:0;display:flex;flex-direction:column}.center-head{height:31px;min-height:31px;display:flex;gap:5px;align-items:center;padding:0 7px;border-bottom:1px solid #3a414c;background:#262c35}.center-head strong{font-size:11px}.center-head .hint{color:#8f99a8;font-size:9px;white-space:nowrap}.scene{position:relative;flex:1;min-height:130px;overflow:hidden;background:linear-gradient(#8eb8d2 0%,#bfd2de 40%,#323e4b 41%,#111b29 100%)}#viewport3d{display:block;width:100%;height:100%;touch-action:none;outline:none}.viewport-hud{position:absolute;top:7px;left:8px;background:#131922d9;border:1px solid #4b5662;border-radius:3px;padding:4px 6px;color:#d1dbe5;font-size:9px;pointer-events:none}.scene-controls{position:absolute;bottom:8px;left:8px;right:8px;display:flex;justify-content:space-between;pointer-events:none}.scene-controls>*{pointer-events:auto}.scene-controls button{min-height:27px;padding:4px 7px;font-size:10px}.floating{display:flex;gap:3px}.tabbar{display:flex;gap:2px}.tabbar button{background:transparent;border-color:transparent;padding:4px 8px;min-height:25px;font-size:10px;border-radius:3px}.tabbar button.active{background:#374454;border-color:#536174;color:white}.center-bottom{height:30px;min-height:30px;border-top:1px solid #3a414b;background:#272d36;padding:3px 6px;display:flex;gap:4px;align-items:center}.center-bottom button{font-size:10px;min-height:23px;padding:3px 7px;border-radius:3px}.center-bottom .wide{font-size:9px}
+.center{position:relative;background:#11161e;border:1px solid #343a43;border-radius:3px;overflow:hidden;min-height:0;display:flex;flex-direction:column}.center-head{height:31px;min-height:31px;display:flex;gap:5px;align-items:center;padding:0 7px;border-bottom:1px solid #3a414c;background:#262c35}.center-head strong{font-size:11px}.center-head .hint{color:#8f99a8;font-size:9px;white-space:nowrap}.scene{position:relative;flex:1;min-height:130px;overflow:hidden;background:linear-gradient(#8eb8d2 0%,#bfd2de 40%,#323e4b 41%,#111b29 100%)}#viewport3d{display:block;width:100%;height:100%;touch-action:none;outline:none}.viewport-hud{position:absolute;top:7px;left:8px;background:#131922d9;border:1px solid #4b5662;border-radius:3px;padding:4px 6px;color:#d1dbe5;font-size:9px;pointer-events:none}.scene-controls{position:absolute;bottom:8px;left:8px;right:8px;display:flex;justify-content:space-between;pointer-events:none}.scene-controls>*{pointer-events:auto}.scene-controls button{min-height:27px;padding:4px 7px;font-size:10px}.floating{display:flex;gap:3px}
+.play-controls[hidden]{display:none!important}.play-controls{position:absolute;inset:0;z-index:5;pointer-events:none;display:flex;align-items:flex-end;justify-content:space-between;padding:18px 16px max(18px,env(safe-area-inset-bottom))}.play-stick{width:112px;height:112px;border-radius:50%;border:2px solid #ffffff88;background:#0b152477;box-shadow:0 4px 22px #0006;display:grid;place-items:center;pointer-events:auto;touch-action:none}.play-stick:before{content:"";position:absolute;width:68px;height:68px;border:1px solid #ffffff44;border-radius:50%}.play-knob{width:42px;height:42px;border-radius:50%;background:#eaf4ffcc;border:2px solid #fff;box-shadow:0 2px 8px #0008;pointer-events:none}.play-actions{display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:auto}.play-jump{width:66px;height:66px;border-radius:50%;border:2px solid #fff;background:#0877d1dd;font-size:11px;font-weight:800;touch-action:none}.play-hint{position:absolute;top:7px;right:8px;background:#111b2bdc;border:1px solid #ffffff44;border-radius:5px;padding:6px 9px;color:white;font-size:10px;pointer-events:none}.app.play-mode .menubar,.app.play-mode .ribbon,.app.play-mode .leftpanel,.app.play-mode .rightpanel,.app.play-mode .center-head,.app.play-mode .center-bottom,.app.play-mode .mobile-nav,.app.play-mode .output{display:none!important}.app.play-mode .main{display:flex!important;padding:0;gap:0}.app.play-mode .center{width:100%;border:0;border-radius:0}.app.play-mode .scene{min-height:0}.app.play-mode .top{height:40px;min-height:40px;background:#101b2a}.app.play-mode #playBtn{background:#a72b35;border-color:#e85b65}.tabbar{display:flex;gap:2px}.tabbar button{background:transparent;border-color:transparent;padding:4px 8px;min-height:25px;font-size:10px;border-radius:3px}.tabbar button.active{background:#374454;border-color:#536174;color:white}.center-bottom{height:30px;min-height:30px;border-top:1px solid #3a414b;background:#272d36;padding:3px 6px;display:flex;gap:4px;align-items:center}.center-bottom button{font-size:10px;min-height:23px;padding:3px 7px;border-radius:3px}.center-bottom .wide{font-size:9px}
 .output{display:block;height:94px;min-height:94px;overflow:auto;border-top:1px solid #3a414b;padding:5px 8px;background:#0f141b;color:#bac7d8;font:10px/1.45 ui-monospace,Consolas,monospace}.output:not(.open){height:23px;min-height:23px;overflow:hidden;padding-top:4px}.output-head{height:22px;display:flex;align-items:center;gap:6px;position:sticky;top:-5px;background:#151b24;margin:-5px -8px 5px;padding:0 7px;color:#d5dbe5;border-bottom:1px solid #303844;font-family:system-ui,sans-serif;font-size:10px}.output-body{white-space:pre-wrap}.output-line{padding:1px 0}.output-line.error{color:#ff8f8f}.output-line.warn{color:#efc477}.output-line.info{color:#8ecbff}
 .rightpanel{display:flex;flex-direction:column}.explorer-dock{height:49%;min-height:130px;display:flex;flex-direction:column;border-bottom:1px solid #454d58}.properties-dock{min-height:0;flex:1;display:flex;flex-direction:column}.dock-title{height:28px;min-height:28px;background:#292e36;border-bottom:1px solid #3c444f;display:flex;align-items:center;justify-content:space-between;padding:0 8px;font-size:11px;font-weight:700}.dock-title .dock-actions{display:flex;gap:2px}.dock-title button{min-height:20px;width:23px;padding:0;font-size:11px;background:transparent;border:0;color:#aeb8c5}.right-tabs{display:flex;border-bottom:1px solid var(--line);height:27px;min-height:27px}.right-tabs button{flex:1;border:0;border-radius:0;background:transparent;font-size:10px;padding:3px}.right-tabs button.active{color:#fff;border-bottom:2px solid var(--cyan)}.props{display:grid;gap:7px}.prop-group{border-bottom:1px solid #343b45;padding-bottom:7px}.prop-title{font-weight:700;font-size:10px;color:#cad4e1;margin-bottom:6px;background:#272d36;padding:4px 6px}.field{display:grid;grid-template-columns:76px 1fr;align-items:center;gap:6px;margin:5px 0}.field label{color:#aab3bf;font-size:10px}.field input{font-size:10px;padding:5px 6px;border-radius:3px;background:#151a21;border-color:#3b434e}.triple{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}.triple input{min-width:0;padding:5px 2px;text-align:center}.check{display:flex;align-items:center;gap:7px;font-size:10px;color:#bdc6d2}.check input{width:auto}.empty{padding:18px 10px;text-align:center;color:var(--muted);font-size:10px}
 .editor{display:none;flex:1;min-height:0;background:#111720}.editor.open{display:flex;flex-direction:column}.editorbar{height:30px;min-height:30px;display:flex;align-items:center;gap:7px;padding:3px 7px;border-bottom:1px solid #3a424d;color:#aeb9c8;background:#222a34;font-size:10px}.editorbar button{min-height:23px;padding:3px 7px;font-size:10px}.code-editor{display:flex;flex:1;min-height:100px;overflow:hidden;background:#0f141b;direction:ltr}.line-numbers{width:39px;flex:0 0 39px;padding:12px 7px 12px 0;text-align:right;color:#637083;background:#121923;border-right:1px solid #29313d;font:11px/1.6 ui-monospace,Consolas,monospace;white-space:pre;overflow:hidden;user-select:none}.code-wrap{position:relative;flex:1;min-width:0;overflow:hidden}.code-highlight,.codearea{position:absolute;inset:0;margin:0;padding:12px 13px;border:0;border-radius:0;width:100%;height:100%;font:11px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;tab-size:4;white-space:pre;overflow:auto;letter-spacing:0}.code-highlight{pointer-events:none;color:#d9e2ee;background:transparent}.codearea{resize:none;background:transparent;color:transparent;caret-color:#fff;outline:none;z-index:2;direction:ltr;text-align:left;white-space:pre;overflow:auto;-webkit-text-fill-color:transparent;selection-background-color:#35587f}.codearea::selection{background:#31577d77}.tok-key{color:#d69bf2}.tok-string{color:#b7d88a}.tok-comment{color:#718297}.tok-number{color:#e6b56d}.tok-api{color:#80c8ef}.editor-footer{height:23px;min-height:23px;display:flex;align-items:center;gap:12px;padding:0 8px;background:#1b222c;border-top:1px solid #343c48;color:#9ca9ba;font-size:9px}
@@ -82,7 +83,7 @@
  </aside>
  <section class="center" id="centerPanel">
   <div class="center-head"><strong id="centerTitle">Workspace</strong><span class="hint">Drag to orbit · Pinch to zoom · Select an object to inspect</span><span class="spacer"></span><div class="tabbar"><button class="active" data-view="scene">3D View</button><button data-view="script">Script</button><button data-view="output">Output</button></div></div>
-  <div class="scene" id="scene"><canvas id="viewport3d" aria-label="3D viewport"></canvas><div class="viewport-hud" id="viewportHud">3D Viewport · Orbit: drag · Zoom: pinch</div><div class="scene-controls"><div class="floating"><button id="zoomOut">−</button><button id="zoomIn">＋</button><button id="resetView">⟳</button></div><button id="focusBtn">◎ Focus</button></div></div>
+  <div class="scene" id="scene"><canvas id="viewport3d" aria-label="3D viewport"></canvas><div class="viewport-hud" id="viewportHud">3D Viewport · Orbit: drag · Zoom: pinch</div><div class="scene-controls"><div class="floating"><button id="zoomOut">−</button><button id="zoomIn">＋</button><button id="resetView">⟳</button></div><button id="focusBtn">◎ Focus</button></div><div class="play-hint" id="playHint" hidden>PLAYTEST · WASD / الأسهم أو عصا الحركة</div><div class="play-controls" id="playControls" hidden><div class="play-stick" id="playStick"><div class="play-knob" id="playKnob"></div></div><div class="play-actions"><button class="play-jump" id="playJump">JUMP ↑</button></div></div></div>
   <div class="editor" id="editor"><div class="editorbar"><span>⌘</span><strong id="scriptTitle">Script</strong><span class="spacer"></span><span>Luau</span><button id="formatBtn">Format</button><button id="runScriptBtn" data-action="run">▶ Run</button></div><div class="code-editor"><div class="line-numbers" id="lineNumbers">1</div><div class="code-wrap"><pre class="code-highlight" id="codeHighlight" aria-hidden="true"></pre><textarea class="codearea" id="codeArea" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">-- Write Luau here
 local part = workspace:FindFirstChild("Part")
 
@@ -129,6 +130,8 @@ const sample=()=>({name:'Untitled Experience',version:2,root:[
 {id:'textChat',name:'TextChatService',className:'TextChatService',children:[]}
 ],selected:'part1'});
 let project=sample(),activeView='scene',activeRight='properties',play=false,zoom=1,undoStack=[],redoStack=[],currentScript='script1',dragNode=null;
+let playState=null,playBackup=null,playCameraBackup=null,playAnimationFrame=0,activeLuauMode='run',pendingPlayStart=false;
+const playKeys={forward:false,back:false,left:false,right:false,jump:false};
 const CLASS_DEFAULTS={Part:{position:{x:0,y:2,z:0},size:{x:4,y:1,z:2},rotation:{x:0,y:0,z:0},color:'#4d9cff',anchored:true,transparency:0},SpawnLocation:{position:{x:0,y:1,z:0},size:{x:6,y:1,z:6},rotation:{x:0,y:0,z:0},color:'#36a88c',anchored:true,transparency:0},Model:{pivot:{x:0,y:0,z:0}},Folder:{},Script:{source:'-- Luau\nprint(\"Hello\")\n',disabled:false},LocalScript:{source:'-- LocalScript\n',disabled:false},ModuleScript:{source:'local Module = {}\nreturn Module\n'},ScreenGui:{children:[]},Frame:{size:{x:300,y:200},backgroundColor3:'#ffffff',children:[]},TextLabel:{text:'Label',textColor3:'#111111',children:[]},TextButton:{text:'Button',children:[]},Accessory:{children:[]}};
 function normalizeNode(n,parent=null){n.id=n.id||uid();n.name=n.name||n.className||'Instance';n.className=n.className||'Folder';n.children=Array.isArray(n.children)?n.children:[];n.attributes=n.attributes&&typeof n.attributes==='object'?n.attributes:{};n.tags=Array.isArray(n.tags)?n.tags:[];n.archivable=n.archivable!==false;for(const c of n.children)normalizeNode(c,n);return n}
 function normalizeProject(p){p.name=p.name||'Untitled Experience';p.root=Array.isArray(p.root)?p.root:[];p.root.forEach(n=>normalizeNode(n,null));return p}
@@ -263,7 +266,7 @@ function renderViewportFrame(){
  // Batch every box into two dynamic buffers and issue one triangles draw call.
  const renderableClasses=new Set(['Part','SpawnLocation','MeshPart','WedgePart','UnionOperation']);
  const allParts=allNodes().filter(node=>node.position&&renderableClasses.has(node.className));
- const renderLimit=5000,nodes=allParts.slice(0,renderLimit),verticesPerPart=state.cubeVertices.length/3;
+ const renderLimit=5000,viewportNodes=playState?.active?[...allNodes(),...(playState.playerNodes||[])]:allNodes(),allParts=viewportNodes.filter(node=>node.position&&renderableClasses.has(node.className)),nodes=allParts.slice(0,renderLimit),verticesPerPart=state.cubeVertices.length/3;
  if(nodes.length){
   const positions=new Float32Array(nodes.length*verticesPerPart*3),colors=new Float32Array(nodes.length*verticesPerPart*4);
   let positionOffset=0,colorOffset=0;
@@ -320,7 +323,7 @@ function renderViewportFrame(){
   }
  }
  const suffix=allParts.length>renderLimit?` · showing ${renderLimit}/${allParts.length}`:'';
- $('viewportHud').textContent=`3D Viewport · ${nodes.length} Parts${suffix} · ${camera.distance.toFixed(1)} studs`;
+ $('viewportHud').textContent=playState?.active?`PLAYTEST · ${playState.x.toFixed(1)}, ${playState.y.toFixed(1)}, ${playState.z.toFixed(1)}`:`3D Viewport · ${nodes.length} Parts${suffix} · ${camera.distance.toFixed(1)} studs`;
 }
 
 function renderScene(){if(!glState)initViewport();drawViewport();$('selectionLabel').textContent=selected()?selected().name+' · '+selected().className:'لا يوجد تحديد';}
@@ -347,12 +350,180 @@ function downloadBlob(data,name,type){let blob=new Blob([data],{type}),a=documen
 function parseVector(el){return {x:Number(el.querySelector('X')?.textContent||0),y:Number(el.querySelector('Y')?.textContent||0),z:Number(el.querySelector('Z')?.textContent||0)}}
 function xmlItemToNode(item){let cls=item.getAttribute('class')||'Folder',p=item.querySelector(':scope > Properties'),get=(tag,name)=>p?.querySelector(`${tag}[name="${name}"]`)?.textContent;let n={id:(item.getAttribute('referent')||uid()).replace(/[^a-zA-Z0-9_-]/g,'_'),name:get('string','Name')||cls,className:cls,children:[],attributes:{},tags:[],expanded:true,archivable:get('bool','Archivable')!=='false'};for(let key of ['Position','Size','Orientation']){let e=p?.querySelector(`Vector3[name="${key}"]`);if(e)n[key==='Orientation'?'rotation':key.toLowerCase()]=parseVector(e)}let c=p?.querySelector('Color3[name="Color3"]');if(c){let rgb=['R','G','B'].map(k=>Math.max(0,Math.min(255,Math.round(Number(c.querySelector(k)?.textContent||0)*255))));n.color='#'+rgb.map(x=>x.toString(16).padStart(2,'0')).join('')}n.material=get('string','Material')||'Plastic';for(let [prop,tag] of [['anchored','Anchored'],['transparency','Transparency']]){let v=get(prop==='anchored'?'bool':'float',tag);if(v!==undefined)n[prop]=prop==='anchored'?v==='true':Number(v)}n.source=get('ProtectedString','Source')||get('string','Source');for(let child of Array.from(item.children).filter(x=>x.tagName==='Item'))n.children.push(xmlItemToNode(child));return n}
 function parseRbxmx(text){let doc=new DOMParser().parseFromString(text,'application/xml');if(doc.querySelector('parsererror'))throw Error('ملف XML غير صالح');let items=Array.from(doc.documentElement.children).filter(x=>x.tagName==='Item');if(!items.length)throw Error('لا توجد عناصر Item مدعومة');return {name:'Imported Roblox Model',version:1,root:items.map(xmlItemToNode),selected:null}}
+
+function luauQuote(value){return '"'+String(value??'').replace(/\\/g,'\\\\').replace(/"/g,'\\"').replace(/\r/g,'\\r').replace(/\n/g,'\\n').replace(/\t/g,'\\t')+'"';}
+function makeRuntimeBootstrap(){
+ let source=['-- Studio Mobile: hydrate the editor Workspace into this Luau run'];
+ let counter=0;
+ const emit=(node,parentRef)=>{
+  if(!node||!node.className)return;
+  const variable='__studioNode'+(++counter);
+  source.push('local '+variable+' = Instance.new('+luauQuote(node.className)+')');
+  source.push(variable+'.Name = '+luauQuote(node.name||node.className));
+  if(node.id)source.push(variable+':SetAttribute("__StudioMobileId", '+luauQuote(node.id)+')');
+  if(node.position){
+   const p=node.position,s=node.size||{x:4,y:1,z:2},r=node.rotation||{x:0,y:0,z:0};
+   source.push(variable+'.Size = Vector3.new('+[s.x||0,s.y||0,s.z||0].join(',')+')');
+   source.push(variable+'.CFrame = CFrame.new('+[p.x||0,p.y||0,p.z||0].join(',')+') * CFrame.Angles('+[r.x||0,r.y||0,r.z||0].map(v=>Number(v)*Math.PI/180).join(',')+')');
+   const m=/^#?([0-9a-f]{6})$/i.exec(String(node.color||'#4d9cff'));
+   if(m){const rgb=[0,2,4].map(i=>parseInt(m[1].slice(i,i+2),16));source.push(variable+'.Color = Color3.fromRGB('+rgb.join(',')+')');}
+   if(node.anchored!==undefined)source.push(variable+'.Anchored = '+(node.anchored!==false?'true':'false'));
+   if(node.canCollide!==undefined)source.push(variable+'.CanCollide = '+(node.canCollide!==false?'true':'false'));
+   if(node.transparency!==undefined)source.push(variable+'.Transparency = '+Number(node.transparency||0));
+   if(node.material)source.push(variable+'.Material = Enum.Material['+luauQuote(node.material)+']');
+  }
+  source.push(variable+'.Parent = '+parentRef);
+  for(const child of (node.children||[]))emit(child,variable);
+ };
+ for(const root of project.root||[]){
+  if(root.className==='Workspace'){for(const child of root.children||[])emit(child,'workspace');}
+  else if(root.className){const service='game:GetService('+luauQuote(root.className)+')';for(const child of root.children||[])emit(child,service);}
+ }
+ return source.join('\n')+'\n';
+}
+function mergeRuntimeNodes(runtimeNodes,oldNodes){
+ const unused=new Set(oldNodes||[]);
+ return (runtimeNodes||[]).map(data=>{
+  let old=null;
+  if(data.studioId)old=(oldNodes||[]).find(n=>n.id===data.studioId)||null;
+  if(old)unused.delete(old);
+  if(!old){old=(oldNodes||[]).find(n=>unused.has(n)&&n.name===data.name&&n.className===data.className)||null;if(old)unused.delete(old);}
+  const node=old||{id:uid(),attributes:{},tags:[],expanded:true};
+  node.name=data.name||data.className||'Instance';
+  node.className=data.className||'Folder';
+  for(const key of ['position','size','rotation','color','anchored','canCollide','transparency','material'])if(data[key]!==undefined)node[key]=data[key];
+  if(data.children)node.children=mergeRuntimeNodes(data.children,node.children||[]);
+  else node.children=node.children||[];
+  node.attributes=node.attributes||{};node.tags=node.tags||[];node.expanded=true;
+  return node;
+ });
+}
+function applyRuntimeScene(sceneJson){
+ let data;
+ try{data=JSON.parse(sceneJson)}catch(error){appendOutput('[Scene sync] Invalid scene snapshot: '+error.message);return false;}
+ const workspaceNode=(project.root||[]).find(n=>n.className==='Workspace');
+ if(!workspaceNode||!Array.isArray(data))return false;
+ workspaceNode.children=mergeRuntimeNodes(data,workspaceNode.children||[]);
+ normalizeProject(project);render();if(!playState?.active)markDirty();
+ return true;
+}
+function appendOutput(message){
+ const out=$('outputBody');const line=document.createElement('div');line.textContent=String(message);out.appendChild(line);out.style.whiteSpace='pre-wrap';out.scrollTop=out.scrollHeight;$('output').classList.add('open');
+}
+function startNativeRun(source,mode){
+ if(activeLuauRequest!==null){toast('A Luau script is already running');return false;}
+ activeLuauMode=mode;activeLuauRequest='luau-'+(++luauRequestCounter);
+ $('output').classList.add('open');$('outputBody').textContent=mode==='play'?'Starting Playtest and running scripts…':'Running Luau and syncing the 3D scene…';
+ if(window.AndroidBridge&&typeof window.AndroidBridge.runLuauAsync==='function'){window.AndroidBridge.runLuauAsync(source,activeLuauRequest);return true;}
+ $('outputBody').textContent='[Luau Runtime] Native Luau library is not available in this APK.';
+ activeLuauRequest=null;return false;
+}
+function scriptsForPlay(){
+ return allNodes().filter(n=>(n.className==='Script'||n.className==='LocalScript')&&n.disabled!==true&&String(n.source||'').trim())
+  .map((n,i)=>'-- '+n.className+': '+n.name+'\ndo\n'+n.source+'\nend\n').join('\n');
+}
+function allViewportParts(){return [...allNodes(),...(playState?.active?(playState.playerNodes||[]):[])].filter(n=>n.position&&['Part','SpawnLocation','MeshPart','WedgePart','UnionOperation'].includes(n.className));}
+function startPlay(){
+ if(playState?.active){stopPlay();return;}
+ if(activeLuauRequest!==null){toast('انتظر انتهاء تنفيذ السكربت الحالي');return;}
+ playBackup=clone(project);playCameraBackup=clone(camera);
+ const spawn=allNodes().find(n=>n.className==='SpawnLocation')||allNodes().find(n=>n.className==='Part'&&n.position);
+ const startX=spawn?.position?.x||0,startZ=spawn?.position?.z||0;
+ const floorY=spawn?(spawn.position.y+(spawn.size?.y||1)/2):0;
+ playState={active:true,waiting:true,x:startX,y:floorY,z:startZ,vx:0,vy:0,vz:0,grounded:true,moveX:0,moveY:0,yaw:camera.yaw,playerNodes:[]};
+ document.querySelector('.app')?.classList.add('play-mode');
+ $('playControls').hidden=false;$('playHint').hidden=false;$('playBtn').textContent='■ Stop';$('playBtn').classList.add('danger');
+ $('viewportHud').textContent='PLAYTEST · Preparing local simulation…';
+ const scriptSource=scriptsForPlay();
+ const source=makeRuntimeBootstrap()+(scriptSource||'-- No enabled Script objects. Workspace preview only.\n');
+ startNativeRun(source,'play');
+ if(activeLuauRequest===null)beginPlaySimulation();
+}
+function updatePlayPlayerNodes(){
+ if(!playState)return;
+ const x=playState.x,y=playState.y,z=playState.z;
+ playState.playerNodes=[
+  {id:'__play_body',name:'LocalPlayer_Body',className:'Part',position:{x,y:y+1.05,z},size:{x:.9,y:1.5,z:.55},color:'#2389e8',anchored:true,transparency:0},
+  {id:'__play_head',name:'LocalPlayer_Head',className:'Part',position:{x,y:y+2.05,z},size:{x:.72,y:.72,z:.72},color:'#f0c7a4',anchored:true,transparency:0},
+  {id:'__play_leg_l',name:'LocalPlayer_LeftLeg',className:'Part',position:{x:x-.24,y:y+.32,z},size:{x:.32,y:.65,z:.36},color:'#273a5b',anchored:true,transparency:0},
+  {id:'__play_leg_r',name:'LocalPlayer_RightLeg',className:'Part',position:{x:x+.24,y:y+.32,z},size:{x:.32,y:.65,z:.36},color:'#273a5b',anchored:true,transparency:0}
+ ];
+}
+function groundAt(x,z,currentBottom){
+ let best=0;
+ for(const p of allViewportParts()){
+  if(p.anchored===false||p.canCollide===false)continue;
+  const pos=p.position,size=p.size||{x:4,y:1,z:2};
+  if(Math.abs(x-pos.x)<(size.x||4)/2+.28&&Math.abs(z-pos.z)<(size.z||2)/2+.28){
+   const top=pos.y+(size.y||1)/2;
+   if(top<=currentBottom+.65&&top>best)best=top;
+  }
+ }
+ return best;
+}
+function beginPlaySimulation(){
+ if(!playState?.active)return;
+ playState.waiting=false;
+ updatePlayPlayerNodes();camera={yaw:playState.yaw,pitch:.24,distance:9,target:[playState.x,playState.y+1.3,playState.z]};
+ $('viewportHud').textContent='PLAYTEST · WASD / الأسهم · عصا الحركة · JUMP';
+ appendOutput('[Playtest] Local character spawned. Scripts ran once; use touch controls or WASD.');
+ playState.lastTime=performance.now();
+ cancelAnimationFrame(playAnimationFrame);
+ playAnimationFrame=requestAnimationFrame(playFrame);
+}
+function playFrame(timestamp){
+ if(!playState?.active||playState.waiting)return;
+ const dt=Math.min(.05,Math.max(.001,(timestamp-(playState.lastTime||timestamp))/1000));playState.lastTime=timestamp;
+ const forward=(playKeys.forward?1:0)-(playKeys.back?1:0)-playState.moveY;
+ const strafe=(playKeys.right?1:0)-(playKeys.left?1:0)+playState.moveX;
+ const length=Math.hypot(forward,strafe)||1;
+ const speed=8.5,fx=Math.sin(playState.yaw),fz=Math.cos(playState.yaw),rx=Math.cos(playState.yaw),rz=-Math.sin(playState.yaw);
+ const dx=((fx*forward+rx*strafe)/length)*speed*dt,dz=((fz*forward+rz*strafe)/length)*speed*dt;
+ const oldBottom=playState.y;playState.x+=dx;playState.z+=dz;
+ const floor=groundAt(playState.x,playState.z,oldBottom);
+ if(playState.jumpQueued&&playState.grounded){playState.vy=9;playState.grounded=false;}
+ playState.jumpQueued=false;
+ if(!playState.grounded)playState.vy-=24*dt;
+ playState.y+=playState.vy*dt;
+ const newFloor=groundAt(playState.x,playState.z,playState.y);
+ if(playState.vy<=0&&playState.y<=newFloor){playState.y=newFloor;playState.vy=0;playState.grounded=true;}
+ playState.y=Math.max(-40,playState.y);
+ updatePlayPlayerNodes();
+ camera.target=[playState.x,playState.y+1.25,playState.z];
+ renderViewportFrame();
+ playAnimationFrame=requestAnimationFrame(playFrame);
+}
+function stopPlay(){
+ if(!playState?.active)return;
+ cancelAnimationFrame(playAnimationFrame);playAnimationFrame=0;
+ playState=null;playKeys.forward=playKeys.back=playKeys.left=playKeys.right=playKeys.jump=false;
+ $('playControls').hidden=true;$('playHint').hidden=true;
+ document.querySelector('.app')?.classList.remove('play-mode');
+ $('playBtn').textContent='▶ Play';$('playBtn').classList.remove('danger');
+ if(playBackup){project=normalizeProject(playBackup);playBackup=null;}
+ if(playCameraBackup){camera=playCameraBackup;playCameraBackup=null;}
+ render();appendOutput('[Playtest] Stopped. Editor state restored.');
+}
+function togglePlay(){if(playState?.active)stopPlay();else startPlay();}
+function bindPlayControls(){
+ const stick=$('playStick'),knob=$('playKnob');let stickPointer=null;
+ const reset=()=>{stickPointer=null;playState&&(playState.moveX=0,playState.moveY=0);knob.style.transform='translate(0,0)';};
+ stick.addEventListener('pointerdown',e=>{if(!playState?.active)return;stickPointer=e.pointerId;stick.setPointerCapture(e.pointerId);move(e);});
+ const move=e=>{if(stickPointer!==e.pointerId)return;const rect=stick.getBoundingClientRect(),cx=rect.left+rect.width/2,cy=rect.top+rect.height/2,dx=e.clientX-cx,dy=e.clientY-cy,len=Math.max(1,Math.hypot(dx,dy)),scale=Math.min(1,42/len),x=dx*scale,y=dy*scale;playState.moveX=x/42;playState.moveY=-y/42;knob.style.transform='translate('+x+'px,'+y+'px)';};
+ stick.addEventListener('pointermove',e=>move(e));stick.addEventListener('pointerup',reset);stick.addEventListener('pointercancel',reset);stick.addEventListener('lostpointercapture',reset);
+ $('playJump').addEventListener('pointerdown',e=>{e.preventDefault();if(playState?.active)playState.jumpQueued=true;});
+ $('playJump').addEventListener('click',()=>{if(playState?.active)playState.jumpQueued=true;});
+ window.addEventListener('keydown',e=>{if(!playState?.active)return;const key=e.key.toLowerCase();if(['w','arrowup'].includes(key)){playKeys.forward=true;e.preventDefault()}if(['s','arrowdown'].includes(key)){playKeys.back=true;e.preventDefault()}if(['a','arrowleft'].includes(key)){playKeys.left=true;e.preventDefault()}if(['d','arrowright'].includes(key)){playKeys.right=true;e.preventDefault()}if(key===' '){playState.jumpQueued=true;e.preventDefault()}});
+ window.addEventListener('keyup',e=>{const key=e.key.toLowerCase();if(['w','arrowup'].includes(key))playKeys.forward=false;if(['s','arrowdown'].includes(key))playKeys.back=false;if(['a','arrowleft'].includes(key))playKeys.left=false;if(['d','arrowright'].includes(key))playKeys.right=false;});
+}
+bindPlayControls();
+
 function exportProject(){let payload=JSON.stringify({format:'StudioMobileProject',version:2,project},null,2);let filename=(project.name.replace(/[^\w\-]+/g,'_')||'project')+'.studiojson';if(window.AndroidBridge&&typeof window.AndroidBridge.exportProject==='function'){window.AndroidBridge.exportProject(filename,payload);toast('اختر مكان حفظ المشروع');return;}downloadBlob(payload,filename,'application/json')}
 
 function importProject(file){let r=new FileReader();r.onload=()=>{try{let text=r.result,p;if(/\.rbxmx$|\.rbxlx$/i.test(file.name)||String(text).trim().startsWith('<?xml')||String(text).includes('<roblox'))p=parseRbxmx(text);else{let data=JSON.parse(text);p=data.project||data;if(!Array.isArray(p.root))throw new Error('صيغة المشروع غير صحيحة')}snapshot();project=normalizeProject(p);render();saveLocal();toast('تم فتح المشروع')}catch(e){toast('تعذر فتح الملف: '+e.message)}};r.readAsText(file)}
 let luauRequestCounter=0,activeLuauRequest=null;
 window.StudioMobile=window.StudioMobile||{};
-window.StudioMobile.onLuauResult=(requestId,result)=>{if(requestId!==activeLuauRequest)return;activeLuauRequest=null;let out=$('outputBody');out.textContent=String(result??'');out.style.whiteSpace='pre-wrap';out.scrollTop=out.scrollHeight;$('output').classList.add('open');};
+window.StudioMobile.onLuauResult=(requestId,result)=>{if(requestId!==activeLuauRequest)return;activeLuauRequest=null;let textResult=String(result??''),marker='\n__STUDIO_MOBILE_SCENE__\n',at=textResult.lastIndexOf(marker),sceneJson=null;if(at>=0){sceneJson=textResult.slice(at+marker.length);textResult=textResult.slice(0,at);applyRuntimeScene(sceneJson);}let out=$('outputBody');out.textContent=textResult;out.style.whiteSpace='pre-wrap';out.scrollTop=out.scrollHeight;$('output').classList.add('open');if(activeLuauMode==='play'&&playState?.active){beginPlaySimulation();}else if(sceneJson!==null){toast('تم تطبيق تغييرات السكربت على مشهد 3D');}};
 
 // Studio ribbon, local Toolbox, mobile dock navigation, and editor ergonomics.
 let activeTool='select';
@@ -373,7 +544,7 @@ document.querySelectorAll('[data-panel]').forEach(b=>b.onclick=()=>{
 document.querySelectorAll('[data-hide-panel]').forEach(b=>b.onclick=()=>$(b.dataset.hidePanel).classList.remove('show-mobile'));
 document.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('click',()=>{
  const a=b.dataset.action;const n=selected();
- if(a==='new'){$('menuBtn').click();return;}if(a==='open'){$('openFile').click();return;}if(a==='save'){saveLocal();return;}if(a==='export'){exportProject();return;}if(a==='run'){switchView('script');runSelectedScript();return;}if(a==='play'){$('playBtn').click();return;}if(a==='stop'){toast('Preview stopped. No live Roblox simulation is available.');return;}if(a==='format'){$('formatBtn').click();switchView('script');return;}if(a==='build-rig'){toast('Avatar rig generation requires the Roblox Engine');return;}if(a==='zoom-in'){camera.distance=Math.max(5,camera.distance*.88);drawViewport();return;}if(a==='zoom-out'){camera.distance=Math.min(100,camera.distance*1.12);drawViewport();return;}if(a==='reset-camera'){camera={yaw:.72,pitch:.62,distance:24,target:[0,2,0]};drawViewport();return;}
+ if(a==='new'){$('menuBtn').click();return;}if(a==='open'){$('openFile').click();return;}if(a==='save'){saveLocal();return;}if(a==='export'){exportProject();return;}if(a==='run'){switchView('script');runSelectedScript();return;}if(a==='play'){togglePlay();return;}if(a==='stop'){stopPlay();return;}if(a==='format'){$('formatBtn').click();switchView('script');return;}if(a==='build-rig'){toast('Avatar rig generation requires the Roblox Engine');return;}if(a==='zoom-in'){camera.distance=Math.max(5,camera.distance*.88);drawViewport();return;}if(a==='zoom-out'){camera.distance=Math.min(100,camera.distance*1.12);drawViewport();return;}if(a==='reset-camera'){camera={yaw:.72,pitch:.62,distance:24,target:[0,2,0]};drawViewport();return;}
  if(a==='anchor'){if(n){snapshot();n.anchored=n.anchored===false;renderInspector();renderScene();toast(n.anchored?'Anchored':'Unanchored');}return;}
  if(a==='color'){if(n){activeRight='properties';renderInspector();const x=$('inspector').querySelector('[data-key="color"]');x?.click();toast('Change Color in Properties');}else toast('Select a Part first');return;}
  if(a==='material'){if(n){snapshot();n.material=n.material==='Neon'?'Plastic':'Neon';renderInspector();renderScene();toast('Material: '+n.material);}return;}
@@ -401,14 +572,14 @@ function highlightLuau(source){const esc=s=>s.replace(/&/g,'&amp;').replace(/</g
 function updateCodeChrome(){const ta=$('codeArea');if(!ta)return;const lines=ta.value.split('\n').length;$('lineNumbers').textContent=Array.from({length:lines},(_,i)=>i+1).join('\n');$('codeHighlight').innerHTML=highlightLuau(ta.value);$('codeHighlight').scrollTop=ta.scrollTop;$('codeHighlight').scrollLeft=ta.scrollLeft;updateCursorStatus();}
 updateCodeChrome();$('runtimeStatus').textContent=window.AndroidBridge&&AndroidBridge.isLuauAvailable()?'Luau VM · Native':'Luau runtime unavailable';
 
-function runSelectedScript(){if(activeLuauRequest!==null){toast('A Luau script is already running');return;}let n=find(currentScript)?.node;if(!n||!String(n.className).includes('Script'))n=selected();let src=n?.source||$('codeArea').value||'';$('output').classList.add('open');$('outputBody').textContent='Compiling and running Luau preview…';if(window.AndroidBridge&&typeof window.AndroidBridge.runLuauAsync==='function'){activeLuauRequest='luau-'+(++luauRequestCounter);window.AndroidBridge.runLuauAsync(src,activeLuauRequest)}else{$('outputBody').textContent='[Luau Runtime] Native Luau library is not built into this Android app.';}}
-$('saveBtn').onclick=saveLocal;$('playBtn').onclick=()=>{toast('Playtest needs the Roblox Engine. Run scripts from the Script ribbon.');};
+function runSelectedScript(){if(activeLuauRequest!==null){toast('A Luau script is already running');return;}let n=find(currentScript)?.node;if(!n||!String(n.className).includes('Script'))n=selected();let src=n?.source||$('codeArea').value||'';startNativeRun(makeRuntimeBootstrap()+'\\n-- Selected script\\n'+src,'run');}
+$('saveBtn').onclick=saveLocal;$('playBtn').onclick=togglePlay;
 $('addPart').onclick=()=>addNode('Part');$('addFolder').onclick=()=>addNode('Folder');$('addScript').onclick=()=>addNode('Script');$('insertPart').onclick=()=>addNode('Part');$('insertSpawn').onclick=()=>addNode('SpawnLocation');$('insertModel').onclick=()=>addNode('Model');$('undoBtn').onclick=()=>{if(!undoStack.length)return;redoStack.push(clone(project));project=undoStack.pop();render();toast('تراجع')};$('redoBtn').onclick=()=>{if(!redoStack.length)return;undoStack.push(clone(project));project=redoStack.pop();render();toast('إعادة')};$('zoomIn').onclick=()=>{camera.distance=Math.max(5,camera.distance*.88);drawViewport()};$('zoomOut').onclick=()=>{camera.distance=Math.min(100,camera.distance*1.12);drawViewport()};$('resetView').onclick=()=>{camera={yaw:.72,pitch:.62,distance:24,target:[0,2,0]};drawViewport()};$('focusBtn').onclick=()=>{let n=selected();if(n?.position){camera.target=[n.position.x,n.position.y,n.position.z];drawViewport();toast('تم التركيز على '+n.name)}};
 document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>switchView(b.dataset.view));document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{activeRight=b.dataset.tab;document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x===b));renderInspector()});
 
 $('menuBtn').onclick=()=>modal('قائمة المشروع',`<div style="display:grid;gap:8px"><button id="newProject">مشروع جديد</button><button id="openProject">فتح مشروع JSON أو RBXMX أو RBXLX</button><button id="exportProject">تصدير مشروع Studio JSON</button><button id="exportRbxmx">تصدير نموذج RBXMX</button><button id="aboutApp">حول Studio Mobile</button></div>`,()=>{});$('modalAction').classList.add('hidden');
 $('modalCancel').onclick=closeModal;
-$('modalContent').addEventListener('click',e=>{let id=e.target.id;if(id==='newProject'){closeModal();modal('مشروع جديد','<input id="newName" value="New Experience"/>',()=>{snapshot();project=sample();project.name=$('newName').value||'New Experience';project.selected='workspace';render();saveLocal()})}if(id==='openProject'){closeModal();$('openFile').click()}if(id==='exportProject'){closeModal();exportProject()}if(id==='exportRbxmx'){closeModal();exportRbxmx()}if(id==='aboutApp'){modal('حول التطبيق','<p>نموذج محرر مستقل للهاتف، مستوحى من سير عمل أدوات البناء. لا يحتوي محرك Roblox ولا يشغّل التجارب الحقيقية.</p>',()=>{})}});
+$('modalContent').addEventListener('click',e=>{let id=e.target.id;if(id==='newProject'){closeModal();modal('مشروع جديد','<input id="newName" value="New Experience"/>',()=>{snapshot();project=sample();project.name=$('newName').value||'New Experience';project.selected='workspace';render();saveLocal()})}if(id==='openProject'){closeModal();$('openFile').click()}if(id==='exportProject'){closeModal();exportProject()}if(id==='exportRbxmx'){closeModal();exportRbxmx()}if(id==='aboutApp'){modal('حول التطبيق','<p>محرر مستقل للهاتف مع عارض 3D، تشغيل Luau لمرة واحدة، ومشاهدة Playtest محلية للتحكم بالشخصية. ليس خادم Roblox أو محركه الكامل.</p>',()=>{})}});
 $('openFile').onchange=e=>{if(e.target.files[0])importProject(e.target.files[0]);e.target.value=''};
 $('formatBtn').onclick=()=>{let t=$('codeArea').value.replace(/\t/g,'    ').replace(/[ ]+$/gm,'');$('codeArea').value=t;let n=find(currentScript)?.node;if(n)n.source=t;toast('تم تنظيف المسافات الزائدة')};
 let saved=safeStorageGet('studioMobileProject');if(saved){try{let p=JSON.parse(saved);if(Array.isArray(p.root))project=normalizeProject(p);}catch{}}render();switchView('scene');selectRibbon('home');setActiveTool('select',true);setTimeout(initViewport,80);

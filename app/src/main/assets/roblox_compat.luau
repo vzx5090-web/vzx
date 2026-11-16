@@ -740,3 +740,61 @@ delay=task.delay
 function tick() return 0 end
 function time() return 0 end
 function warn(...) print("[Warn]",...) end
+
+
+-- Export the live Luau Workspace back to the 3D editor after a script run.
+local function studioJsonString(value)
+    local source=tostring(value or "")
+    local out={'"'}
+    for i=1,#source do
+        local byte=string.byte(source,i)
+        if byte==34 then table.insert(out,'\\"')
+        elseif byte==92 then table.insert(out,'\\\\')
+        elseif byte==8 then table.insert(out,'\\b')
+        elseif byte==9 then table.insert(out,'\\t')
+        elseif byte==10 then table.insert(out,'\\n')
+        elseif byte==12 then table.insert(out,'\\f')
+        elseif byte==13 then table.insert(out,'\\r')
+        elseif byte<32 then table.insert(out,string.format('\\u%04x',byte))
+        else table.insert(out,string.char(byte)) end
+    end
+    table.insert(out,'"')
+    return table.concat(out)
+end
+local function studioJsonNumber(value)
+    if type(value)~="number" or value~=value or value==math.huge or value==-math.huge then return "0" end
+    return tostring(value)
+end
+local function studioJsonVector(value)
+    if not value then return '{"x":0,"y":0,"z":0}' end
+    return '{"x":'..studioJsonNumber(value.X)..',"y":'..studioJsonNumber(value.Y)..',"z":'..studioJsonNumber(value.Z)..'}'
+end
+local function studioSceneNode(object)
+    local fields={
+        '"name":'..studioJsonString(object.Name),
+        '"className":'..studioJsonString(object.ClassName),
+    }
+    local studioId=object:GetAttribute("__StudioMobileId")
+    if studioId then table.insert(fields,'"studioId":'..studioJsonString(studioId)) end
+    if object:IsA("BasePart") then
+        table.insert(fields,'"position":'..studioJsonVector(object.Position))
+        table.insert(fields,'"size":'..studioJsonVector(object.Size))
+        local rx,ry,rz=object.CFrame:ToOrientation()
+        local deg=180/math.pi
+        table.insert(fields,'"rotation":{"x":'..studioJsonNumber(rx*deg)..',"y":'..studioJsonNumber(ry*deg)..',"z":'..studioJsonNumber(rz*deg)..'}')
+        table.insert(fields,'"color":'..studioJsonString('#'..object.Color:ToHex()))
+        table.insert(fields,'"anchored":'..(object.Anchored and "true" or "false"))
+        table.insert(fields,'"canCollide":'..(object.CanCollide and "true" or "false"))
+        table.insert(fields,'"transparency":'..studioJsonNumber(object.Transparency))
+        table.insert(fields,'"material":'..studioJsonString(object.Material and object.Material.Name or "Plastic"))
+    end
+    local children={}
+    for _,child in ipairs(object:GetChildren()) do table.insert(children,studioSceneNode(child)) end
+    table.insert(fields,'"children":['..table.concat(children,",")..']')
+    return '{'..table.concat(fields,",")..'}'
+end
+function __StudioMobileExportScene()
+    local children={}
+    for _,child in ipairs(workspace:GetChildren()) do table.insert(children,studioSceneNode(child)) end
+    return '['..table.concat(children,",")..']'
+end

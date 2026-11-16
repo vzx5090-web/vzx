@@ -143,6 +143,24 @@ Java_com_studiomobile_app_NativeLuau_runNative(JNIEnv* env, jclass, jstring prel
             std::string("RUNTIME ERROR: ") + (error ? error : "unknown") + "\n";
     } else if (ctx.output.empty()) ctx.output = "Execution completed (no output).\n";
 
+    // Serialize Workspace after execution so the Android 3D viewport can mirror Luau changes.
+    lua_settop(L, 0);
+    lua_getglobal(L, "__StudioMobileExportScene");
+    if (lua_isfunction(L, -1)) {
+        if (lua_pcall(L, 0, 1, 0) == 0 && lua_isstring(L, -1)) {
+            size_t sceneLength = 0;
+            const char* sceneJson = lua_tolstring(L, -1, &sceneLength);
+            constexpr size_t MAX_SCENE_JSON = 512 * 1024;
+            if (sceneJson && sceneLength > 0 && sceneLength <= MAX_SCENE_JSON) {
+                ctx.output.append("\n__STUDIO_MOBILE_SCENE__\n");
+                ctx.output.append(sceneJson, sceneLength);
+            } else if (sceneLength > MAX_SCENE_JSON) {
+                ctx.output += "\n[Scene sync skipped: scene is larger than 512 KiB]";
+            }
+        }
+    }
+    lua_settop(L, 0);
+
     if (ctx.truncated) ctx.output += "\n[Output truncated at 64 KiB]";
     ctx.output += "\n[Luau preview: " + std::to_string(elapsed) + " ms; VM " +
         std::to_string(lua_totalbytes(L, -1) / 1024) + " KiB]";
