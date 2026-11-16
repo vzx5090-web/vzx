@@ -604,6 +604,6 @@ function task.cancel(_) end
 wait=task.wait
 spawn=task.spawn
 delay=task.delay
-function tick() return os.clock() end
-function time() return os.clock() end
+function tick() return 0 end
+function time() return 0 end
 function warn(...) print("[Warn]",...) end
