@@ -66,6 +66,10 @@ local propertyChanged=false
 tagged:GetPropertyChangedSignal("Anchored"):Connect(function() propertyChanged=true end)
 tagged.Anchored=false
 assert(propertyChanged==true)
+local nameChanged=false
+tagged:GetPropertyChangedSignal("Name"):Connect(function() nameChanged=true end)
+tagged.Name="RenamedPiece"
+assert(nameChanged==true and tagged.Name=="RenamedPiece")
 local tween=game:GetService("TweenService"):Create(tagged,nil,{Transparency=0.5})
 tween:Play()
 assert(tagged.Transparency==0.5)

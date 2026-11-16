@@ -408,6 +408,11 @@ BrickColor.Gray=BrickColor.new("Medium stone grey");BrickColor.Red=BrickColor.ne
 
 local InstanceMT={}
 local function descendants(root,out) for _,c in ipairs(root._children) do table.insert(out,c);descendants(c,out) end end
+local function firePropertyChanged(self,key)
+    if self._changed then self._changed:Fire(key) end
+    local changed=self._propertySignals and self._propertySignals[key]
+    if changed then changed:Fire() end
+end
 InstanceMT.__index=function(self,key)
     if key=="Parent" then return rawget(self,"_parent") end
     if key=="ChildAdded" then return rawget(self,"_childAdded") end
@@ -417,6 +422,8 @@ InstanceMT.__index=function(self,key)
     if key=="Changed" then return rawget(self,"_changed") end
     if key=="Touched" then return rawget(self,"_touched") end
     if key=="TouchEnded" then return rawget(self,"_touchEnded") end
+    local props=rawget(self,"_props")
+    if props and props[key]~=nil then return props[key] end
     return InstanceMethods[key] or rawget(self,key)
 end
 InstanceMT.__newindex=function(self,key,value)
@@ -439,20 +446,25 @@ InstanceMT.__newindex=function(self,key,value)
         end
         return
     end
-    local previous=rawget(self,key)
-    rawset(self,key,value)
+    if string.sub(key,1,1)=="_" then rawset(self,key,value);return end
+    local props=rawget(self,"_props")
+    if not props then rawset(self,key,value);return end
+    local previous=props[key]
+    props[key]=value
     if key=="CFrame" and getmetatable(value)==CFrameMT then
-        rawset(self,"Position",value.Position)
+        local oldPosition=props.Position
+        props.Position=value.Position
+        if oldPosition~=value.Position then firePropertyChanged(self,"Position") end
     elseif key=="Position" and getmetatable(value)==Vector3MT then
-        local cf=rawget(self,"CFrame")
-        if cf then rawset(self,"CFrame",makeCFrame(value,cf.R00,cf.R01,cf.R02,cf.R10,cf.R11,cf.R12,cf.R20,cf.R21,cf.R22)) end
+        local cf=props.CFrame
+        if cf then
+            local nextCFrame=makeCFrame(value,cf.R00,cf.R01,cf.R02,cf.R10,cf.R11,cf.R12,cf.R20,cf.R21,cf.R22)
+            if cf~=nextCFrame then props.CFrame=nextCFrame;firePropertyChanged(self,"CFrame") end
+        end
     end
-    if previous~=value then
-        if self._changed then self._changed:Fire(key) end
-        local changed=self._propertySignals and self._propertySignals[key]
-        if changed then changed:Fire() end
-    end
+    if previous~=value then firePropertyChanged(self,key) end
 end
+
 function InstanceMethods:IsA(class)
     if self.ClassName==class or class=="Instance" then return true end
     local inheritance={
@@ -564,15 +576,15 @@ end
 function InstanceMethods:Clone()
     local c=Instance.new(self.ClassName);c.Name=self.Name
     for k,v in pairs(self._attributes) do c._attributes[k]=v end
-    for k,v in pairs(self) do
-        if string.sub(k,1,1)~="_" and k~="ClassName" and k~="Name" and k~="Parent" then c[k]=v end
+    for k,v in pairs(self._props or {}) do
+        if k~="ClassName" and k~="Name" then c[k]=v end
     end
     for _,child in ipairs(self._children) do child:Clone().Parent=c end
     return c
 end
 Instance={}
 function Instance.new(class)
-    local x=setmetatable({_isInstance=true,ClassName=class,Name=class,_parent=nil,_children={},_attributes={},
+    local x=setmetatable({_isInstance=true,_props={ClassName=class,Name=class},_parent=nil,_children={},_attributes={},
         _propertySignals={},_attributeSignals={},_childAdded=signal(),_childRemoved=signal(),_descAdded=signal(),
         _descRemoving=signal(),_changed=signal(),_touched=signal(),_touchEnded=signal()},InstanceMT)
     if class=="Part" or class=="MeshPart" or class=="UnionOperation" then
@@ -593,7 +605,7 @@ function Instance.new(class)
 end
 local function serviceInstance(name)
     local service=Instance.new("Folder")
-    rawset(service,"ClassName",name)
+    service.ClassName=name
     service.Name=name
     return service
 end
