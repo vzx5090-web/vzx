@@ -327,6 +327,12 @@ InstanceMT.__newindex=function(self,key,value)
     end
     local previous=rawget(self,key)
     rawset(self,key,value)
+    if key=="CFrame" and getmetatable(value)==CFrameMT then
+        rawset(self,"Position",value.Position)
+    elseif key=="Position" and getmetatable(value)==Vector3MT then
+        local cf=rawget(self,"CFrame")
+        if cf then rawset(self,"CFrame",makeCFrame(value,cf.R00,cf.R01,cf.R02,cf.R10,cf.R11,cf.R12,cf.R20,cf.R21,cf.R22)) end
+    end
     if previous~=value then
         if self._changed then self._changed:Fire(key) end
         local changed=self._propertySignals and self._propertySignals[key]
@@ -433,18 +439,91 @@ function Instance.new(class)
     end
     return x
 end
-workspace=Instance.new("Workspace");workspace.Name="Workspace"
-game={}
+workspace=Instance.new("Workspace");workspace.Name="Workspace";workspace.Gravity=196.2
+workspace.CurrentCamera={Name="Camera",CFrame=CFrame.new(0,5,16),FieldOfView=70,ViewportSize=Vector2.new(360,720)}
+game={Name="DataModel",PlaceId=0,JobId="studio-mobile-preview",GameId=0}
 local services={}
+local playersService={Name="Players",PlayerAdded=signal(),PlayerRemoving=signal(),CharacterAutoLoads=true}
+local localPlayer={Name="LocalPlayer",DisplayName="Local Player",UserId=1,AccountAge=0,MembershipType=Enum.MembershipType.None}
+localPlayer.PlayerGui=Instance.new("PlayerGui");localPlayer.Character=Instance.new("Model");localPlayer.Character.Name="Character"
+local rootPart=Instance.new("Part");rootPart.Name="HumanoidRootPart";rootPart.Parent=localPlayer.Character
+local humanoid=Instance.new("Humanoid");humanoid.Parent=localPlayer.Character
+function localPlayer:FindFirstChild(name) if name=="PlayerGui" then return self.PlayerGui end;return self.Character and self.Character:FindFirstChild(name) end
+function playersService:GetPlayers() return {localPlayer} end
+function playersService:GetPlayerFromCharacter(character) return character==localPlayer.Character and localPlayer or nil end
+playersService.LocalPlayer=localPlayer
+local runService={Name="RunService",Heartbeat=signal(),RenderStepped=signal(),Stepped=signal()}
+function runService:IsStudio() return true end
+function runService:IsClient() return true end
+function runService:IsServer() return false end
+function runService:IsRunning() return true end
+local tweenService={Name="TweenService"}
+function tweenService:Create(object,info,goals)
+    local tween={Instance=object,Info=info,PlaybackState=Enum.PlaybackState.Begin,Completed=signal()}
+    function tween:Play()
+        for key,value in pairs(goals or {}) do object[key]=value end
+        self.PlaybackState=Enum.PlaybackState.Completed
+        self.Completed:Fire(Enum.PlaybackState.Completed)
+    end
+    function tween:Cancel() self.PlaybackState=Enum.PlaybackState.Cancelled end
+    function tween:Pause() self.PlaybackState=Enum.PlaybackState.Paused end
+    function tween:Destroy() end
+    return tween
+end
+local debris={Name="Debris"}
+function debris:AddItem(object,lifetime) if lifetime and lifetime<=0 and object and object.Destroy then object:Destroy() end end
+local collectionService={Name="CollectionService",_tags={}}
+function collectionService:AddTag(object,tag)
+    self._tags[tag]=self._tags[tag] or {};self._tags[tag][object]=true
+end
+function collectionService:RemoveTag(object,tag) if self._tags[tag] then self._tags[tag][object]=nil end end
+function collectionService:HasTag(object,tag) return self._tags[tag] and self._tags[tag][object]==true or false end
+function collectionService:GetTags(object)
+    local result={};for tag,objects in pairs(self._tags) do if objects[object] then table.insert(result,tag) end end;return result
+end
+function collectionService:GetTagged(tag)
+    local result={};for object in pairs(self._tags[tag] or {}) do table.insert(result,object) end;return result
+end
+local function makeFolderService(name)
+    local s=Instance.new("Folder");s.Name=name;return s
+end
+local lighting=makeFolderService("Lighting");lighting.Brightness=2;lighting.ClockTime=14;lighting.FogEnd=100000
+local replicatedStorage=makeFolderService("ReplicatedStorage")
+local serverStorage=makeFolderService("ServerStorage")
+local serverScriptService=makeFolderService("ServerScriptService")
+local starterGui=makeFolderService("StarterGui")
+local starterPack=makeFolderService("StarterPack")
+local soundService=makeFolderService("SoundService")
+local teams=makeFolderService("Teams")
+local function getDataStore(name)
+    local values={}
+    return {
+        Name=name,
+        GetAsync=function(_,key) return values[tostring(key)] end,
+        SetAsync=function(_,key,value) values[tostring(key)]=value end,
+        RemoveAsync=function(_,key) local old=values[tostring(key)];values[tostring(key)]=nil;return old end,
+        UpdateAsync=function(_,key,transform) local k=tostring(key);local nextValue=transform(values[k]);values[k]=nextValue;return nextValue end
+    }
+end
+local dataStoreService={Name="DataStoreService"}
+function dataStoreService:GetDataStore(name) return getDataStore(name) end
+function dataStoreService:GetGlobalDataStore() return getDataStore("Global") end
+game.Workspace=workspace
 function game:GetService(name)
     if name=="Workspace" then return workspace end
-    if not services[name] then
-        local s={Name=name}
-        if name=="RunService" then function s:IsStudio() return true end end
-        services[name]=s
-    end
+    local known={
+        Players=playersService,RunService=runService,TweenService=tweenService,Debris=debris,
+        CollectionService=collectionService,Lighting=lighting,ReplicatedStorage=replicatedStorage,
+        ServerStorage=serverStorage,ServerScriptService=serverScriptService,StarterGui=starterGui,
+        StarterPack=starterPack,SoundService=soundService,Teams=teams,DataStoreService=dataStoreService
+    }
+    if known[name] then return known[name] end
+    if not services[name] then services[name]={Name=name} end
     return services[name]
 end
+function game:FindService(name) return self:GetService(name) end
+function game:IsLoaded() return true end
+
 function typeof(v)
     if type(v)=="table" then if v._isInstance then return "Instance" end;if getmetatable(v)==Vector3MT then return "Vector3" end;if getmetatable(v)==Vector2MT then return "Vector2" end;if getmetatable(v)==Color3MT then return "Color3" end;if getmetatable(v)==CFrameMT then return "CFrame" end end
     return type(v)
