@@ -12,7 +12,11 @@ const required = [
   'function mergeRuntimeNodes','function startPlay','function stopPlay',
   'function playFrame','function bindPlayControls',
   '__STUDIO_MOBILE_SCENE__','playStick','playJump',
-  "playBtn').onclick=togglePlay"
+  "playBtn').onclick=togglePlay",
+  "const src=String($('codeArea').value||'')",
+  "n.source=src;currentScript=n.id;markDirty()",
+  "name:'Baseplate',className:'Part'",
+  "selected:'spawn'"
 ];
 for (const item of required) {
   if (!html.includes(item)) throw new Error('Missing Studio UI feature: ' + item);

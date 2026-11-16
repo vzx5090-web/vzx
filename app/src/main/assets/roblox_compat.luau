@@ -475,7 +475,7 @@ end
 function InstanceMethods:IsA(class)
     if self.ClassName==class or class=="Instance" then return true end
     local inheritance={
-        Part={"BasePart","PVInstance"},MeshPart={"BasePart","PVInstance"},UnionOperation={"BasePart","PVInstance"},
+        Part={"BasePart","PVInstance"},SpawnLocation={"BasePart","PVInstance"},MeshPart={"BasePart","PVInstance"},UnionOperation={"BasePart","PVInstance"},
         Model={"PVInstance"},Tool={"BackpackItem"},HopperBin={"BackpackItem"},
         Frame={"GuiObject","GuiBase2d"},TextLabel={"GuiObject","GuiBase2d"},TextButton={"GuiButton","GuiObject","GuiBase2d"},
         ImageLabel={"GuiObject","GuiBase2d"},ImageButton={"GuiButton","GuiObject","GuiBase2d"},
@@ -595,9 +595,11 @@ function Instance.new(class)
     local x=setmetatable({_isInstance=true,_props={ClassName=class,Name=class},_parent=nil,_children={},_attributes={},
         _propertySignals={},_attributeSignals={},_childAdded=signal(),_childRemoved=signal(),_descAdded=signal(),
         _descRemoving=signal(),_changed=signal(),_touched=signal(),_touchEnded=signal()},InstanceMT)
-    if class=="Part" or class=="MeshPart" or class=="UnionOperation" then
-        x.Position=Vector3.zero;x.CFrame=CFrame.new();x.Size=Vector3.new(4,1,4)
-        x.Color=Color3.fromRGB(74,163,199);x.Anchored=true;x.CanCollide=true;x.CanTouch=true
+    if class=="Part" or class=="SpawnLocation" or class=="MeshPart" or class=="UnionOperation" then
+        x.Position=Vector3.zero;x.CFrame=CFrame.new()
+        x.Size=class=="SpawnLocation" and Vector3.new(6,1,6) or Vector3.new(4,1,4)
+        x.Color=class=="SpawnLocation" and Color3.fromRGB(54,201,138) or Color3.fromRGB(74,163,199)
+        x.Anchored=true;x.CanCollide=true;x.CanTouch=true
         x.CanQuery=true;x.Transparency=0;x.Reflectance=0;x.Material=Enum.Material.Plastic
     elseif class=="Model" then x._pivot=CFrame.new()
     elseif class=="Humanoid" then x.Health=100;x.MaxHealth=100;x.WalkSpeed=16;x.JumpPower=50;x.HipHeight=2

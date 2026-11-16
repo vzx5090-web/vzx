@@ -120,4 +120,24 @@ local sceneJson=__StudioMobileExportScene()
 assert(string.find(sceneJson,"SmokePart",1,true))
 assert(string.find(sceneJson,"FF4000",1,true) or string.find(sceneJson,"Color3",1,true))
 assert(string.find(sceneJson,"Workspace",1,true)==nil)
+
+-- Regression: this is the exact Part-creation flow users enter in the editor.
+local scriptedPart = Instance.new("Part")
+scriptedPart.Name = "MyPart"
+scriptedPart.Position = Vector3.new(0, 6, 0)
+scriptedPart.Color = Color3.fromRGB(255, 0, 0)
+scriptedPart.Parent = workspace
+local scriptedScene = __StudioMobileExportScene()
+assert(string.find(scriptedScene, '"name":"MyPart"', 1, true))
+assert(string.find(scriptedScene, '"color":"#FF0000"', 1, true))
+assert(string.find(scriptedScene, '"y":6', 1, true))
+
+local spawnCheck = Instance.new("SpawnLocation")
+spawnCheck.Name = "SmokeSpawn"
+spawnCheck.Parent = workspace
+assert(spawnCheck:IsA("BasePart"))
+assert(spawnCheck.Size == Vector3.new(6, 1, 6))
+assert(string.find(__StudioMobileExportScene(), '"name":"SmokeSpawn"', 1, true))
 print("ROBLOX_SCENE_EXPORT_OK")
+print("USER_SCRIPT_PART_CREATION_OK")
+print("SPAWNLOCATION_BASEPART_OK")
