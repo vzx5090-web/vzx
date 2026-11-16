@@ -42,6 +42,14 @@ assert(game:GetService("Workspace")==workspace)
 local players=game:GetService("Players")
 assert(players.LocalPlayer.UserId==1)
 assert(players.LocalPlayer:FindFirstChild("HumanoidRootPart"))
+local localPlayer=players.LocalPlayer
+
+assert(typeof(players)=="Instance")
+assert(players:FindFirstChild("LocalPlayer")==localPlayer)
+assert(game:FindFirstChild("Workspace")==workspace)
+assert(game:GetService("Lighting"):FindFirstChild("Missing")==nil)
+assert(game:GetService("HttpService"):FindFirstChild("Anything")==nil)
+
 local tagged=Instance.new("Part")
 local tags=game:GetService("CollectionService")
 tags:AddTag(tagged,"BuildPiece")
