@@ -268,6 +268,7 @@ public final class MainActivity extends Activity {
         JSONObject request = new JSONObject()
                 .put("model", "gemini-3.8-flash")
                 .put("input", input)
+                .put("store", false)
                 .put("response_format", new JSONObject()
                         .put("type", "text")
                         .put("mime_type", "application/json")
@@ -324,7 +325,8 @@ public final class MainActivity extends Activity {
                     StringBuilder combined = new StringBuilder();
                     for (int i = 0; i < steps.length(); i++) {
                         JSONObject step = steps.optJSONObject(i);
-                        JSONArray content = step == null ? null : step.optJSONArray("content");
+                        if (step == null || !"model_output".equals(step.optString("type"))) continue;
+                        JSONArray content = step.optJSONArray("content");
                         if (content == null) continue;
                         for (int j = 0; j < content.length(); j++) {
                             JSONObject item = content.optJSONObject(j);
