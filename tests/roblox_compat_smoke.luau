@@ -52,6 +52,28 @@ assert(math.abs(modelPart.Position.X-10)<0.00001)
 local store=game:GetService("DataStoreService"):GetDataStore("Smoke")
 store:SetAsync("score",25)
 assert(store:GetAsync("score")==25)
+
+local remote=Instance.new("RemoteEvent")
+local remoteSeen=false
+remote.OnServerEvent:Connect(function(player,value) remoteSeen=(player==players.LocalPlayer and value=="hello") end)
+remote:FireServer("hello")
+assert(remoteSeen)
+local bindable=Instance.new("BindableEvent")
+local bindableSeen=false
+bindable.Event:Connect(function(value) bindableSeen=(value==42) end)
+bindable:Fire(42)
+assert(bindableSeen)
+local remoteFunction=Instance.new("RemoteFunction")
+remoteFunction.OnServerInvoke=function(player,value) return player.UserId+value end
+assert(remoteFunction:InvokeServer(8)==9)
+local tweenInfo=TweenInfo.new(0.25,Enum.EasingStyle.Linear,Enum.EasingDirection.Out)
+assert(tweenInfo.Time==0.25)
+assert(NumberSequence.new(0.5).Keypoints[1].Value==0.5)
+assert(ColorSequence.new(Color3.new(1,0,0)).Keypoints[2].Value.R==1)
+local sharedStoreA=game:GetService("DataStoreService"):GetDataStore("Shared")
+sharedStoreA:SetAsync("x",77)
+local sharedStoreB=game:GetService("DataStoreService"):GetDataStore("Shared")
+assert(sharedStoreB:GetAsync("x")==77)
 local fired=false
 folder.ChildAdded:Connect(function(child) fired=child.Name=="AddedChild" end)
 local child=Instance.new("Folder")
