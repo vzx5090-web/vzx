@@ -265,7 +265,6 @@ function renderViewportFrame(){
  gl.drawArrays(gl.LINES,0,state.gridVertexCount);
  // Batch every box into two dynamic buffers and issue one triangles draw call.
  const renderableClasses=new Set(['Part','SpawnLocation','MeshPart','WedgePart','UnionOperation']);
- const allParts=allNodes().filter(node=>node.position&&renderableClasses.has(node.className));
  const renderLimit=5000,viewportNodes=playState?.active?[...allNodes(),...(playState.playerNodes||[])]:allNodes(),allParts=viewportNodes.filter(node=>node.position&&renderableClasses.has(node.className)),nodes=allParts.slice(0,renderLimit),verticesPerPart=state.cubeVertices.length/3;
  if(nodes.length){
   const positions=new Float32Array(nodes.length*verticesPerPart*3),colors=new Float32Array(nodes.length*verticesPerPart*4);
@@ -480,7 +479,8 @@ function playFrame(timestamp){
  const speed=8.5,fx=Math.sin(playState.yaw),fz=Math.cos(playState.yaw),rx=Math.cos(playState.yaw),rz=-Math.sin(playState.yaw);
  const dx=((fx*forward+rx*strafe)/length)*speed*dt,dz=((fz*forward+rz*strafe)/length)*speed*dt;
  const oldBottom=playState.y;playState.x+=dx;playState.z+=dz;
- const floor=groundAt(playState.x,playState.z,oldBottom);
+ const support=groundAt(playState.x,playState.z,oldBottom);
+ if(playState.grounded){if(support>0&&oldBottom<=support+.3){playState.y=support;playState.vy=0;}else playState.grounded=false;}
  if(playState.jumpQueued&&playState.grounded){playState.vy=9;playState.grounded=false;}
  playState.jumpQueued=false;
  if(!playState.grounded)playState.vy-=24*dt;
@@ -572,7 +572,7 @@ function highlightLuau(source){const esc=s=>s.replace(/&/g,'&amp;').replace(/</g
 function updateCodeChrome(){const ta=$('codeArea');if(!ta)return;const lines=ta.value.split('\n').length;$('lineNumbers').textContent=Array.from({length:lines},(_,i)=>i+1).join('\n');$('codeHighlight').innerHTML=highlightLuau(ta.value);$('codeHighlight').scrollTop=ta.scrollTop;$('codeHighlight').scrollLeft=ta.scrollLeft;updateCursorStatus();}
 updateCodeChrome();$('runtimeStatus').textContent=window.AndroidBridge&&AndroidBridge.isLuauAvailable()?'Luau VM · Native':'Luau runtime unavailable';
 
-function runSelectedScript(){if(activeLuauRequest!==null){toast('A Luau script is already running');return;}let n=find(currentScript)?.node;if(!n||!String(n.className).includes('Script'))n=selected();let src=n?.source||$('codeArea').value||'';startNativeRun(makeRuntimeBootstrap()+'\\n-- Selected script\\n'+src,'run');}
+function runSelectedScript(){if(activeLuauRequest!==null){toast('A Luau script is already running');return;}let n=find(currentScript)?.node;if(!n||!String(n.className).includes('Script'))n=selected();let src=n?.source||$('codeArea').value||'';startNativeRun(makeRuntimeBootstrap()+'\n-- Selected script\n'+src,'run');}
 $('saveBtn').onclick=saveLocal;$('playBtn').onclick=togglePlay;
 $('addPart').onclick=()=>addNode('Part');$('addFolder').onclick=()=>addNode('Folder');$('addScript').onclick=()=>addNode('Script');$('insertPart').onclick=()=>addNode('Part');$('insertSpawn').onclick=()=>addNode('SpawnLocation');$('insertModel').onclick=()=>addNode('Model');$('undoBtn').onclick=()=>{if(!undoStack.length)return;redoStack.push(clone(project));project=undoStack.pop();render();toast('تراجع')};$('redoBtn').onclick=()=>{if(!redoStack.length)return;undoStack.push(clone(project));project=redoStack.pop();render();toast('إعادة')};$('zoomIn').onclick=()=>{camera.distance=Math.max(5,camera.distance*.88);drawViewport()};$('zoomOut').onclick=()=>{camera.distance=Math.min(100,camera.distance*1.12);drawViewport()};$('resetView').onclick=()=>{camera={yaw:.72,pitch:.62,distance:24,target:[0,2,0]};drawViewport()};$('focusBtn').onclick=()=>{let n=selected();if(n?.position){camera.target=[n.position.x,n.position.y,n.position.z];drawViewport();toast('تم التركيز على '+n.name)}};
 document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>switchView(b.dataset.view));document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{activeRight=b.dataset.tab;document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x===b));renderInspector()});

@@ -113,6 +113,7 @@ child.Parent=folder
 assert(fired)
 print("ROBLOX_COMPAT_SMOKE_OK",part:GetFullName())
 
+part.Color=color
 local sceneJson=__StudioMobileExportScene()
 assert(string.find(sceneJson,"SmokePart",1,true))
 assert(string.find(sceneJson,"FF4000",1,true) or string.find(sceneJson,"Color3",1,true))
