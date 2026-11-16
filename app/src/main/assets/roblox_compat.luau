@@ -28,6 +28,8 @@ Vector3MT.__index=function(self,key)
 end
 Vector3MT.__add=function(a,b) return Vector3.new(a.X+b.X,a.Y+b.Y,a.Z+b.Z) end
 Vector3MT.__sub=function(a,b) return Vector3.new(a.X-b.X,a.Y-b.Y,a.Z-b.Z) end
+Vector3MT.__unm=function(a) return Vector3.new(-a.X,-a.Y,-a.Z) end
+Vector3MT.__div=function(a,b) if type(b)=="number" then return Vector3.new(a.X/b,a.Y/b,a.Z/b) end;return Vector3.new(a.X/b.X,a.Y/b.Y,a.Z/b.Z) end
 Vector3MT.__mul=function(a,b) if type(a)=="number" then return Vector3.new(a*b.X,a*b.Y,a*b.Z) end return Vector3.new(a.X*b,a.Y*b,a.Z*b) end
 Vector3MT.__eq=function(a,b) return a.X==b.X and a.Y==b.Y and a.Z==b.Z end
 function Vector3Methods:Dot(b) return self.X*b.X+self.Y*b.Y+self.Z*b.Z end
