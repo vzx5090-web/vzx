@@ -1,11 +1,18 @@
 const fs = require('fs');
 const html = fs.readFileSync('app/src/main/assets/index.html', 'utf8');
 const script = html.match(/<script>([\s\S]*?)<\/script>/)[1];
+// Parse the entire embedded application script, not just this test file.
+new Function(script);
 const required = [
   'HOME','MODEL','AVATAR','UI','SCRIPT','TEST','VIEW','PLUGINS',
   'Toolbox','Explorer','Properties','Output','codeHighlight','lineNumbers',
   'data-tool="move"','data-tool="scale"','data-tool="rotate"',
-  'function runSelectedScript','function setActiveTool','data-panel="explorer"'
+  'function runSelectedScript','function setActiveTool','data-panel="explorer"',
+  'function makeRuntimeBootstrap','function applyRuntimeScene',
+  'function mergeRuntimeNodes','function startPlay','function stopPlay',
+  'function playFrame','function bindPlayControls',
+  '__STUDIO_MOBILE_SCENE__','playStick','playJump',
+  "playBtn').onclick=togglePlay"
 ];
 for (const item of required) {
   if (!html.includes(item)) throw new Error('Missing Studio UI feature: ' + item);
