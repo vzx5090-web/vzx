@@ -280,6 +280,95 @@ end
 NumberRange={}
 function NumberRange.new(min,max) return {Min=min or 0,Max=max or min or 0} end
 
+RaycastParams={}
+function RaycastParams.new()
+    return {FilterType=Enum.RaycastFilterType.Exclude,FilterDescendantsInstances={},
+        IgnoreWater=false,CollisionGroup="Default",RespectCanCollide=false, BruteForceAllSlow=false}
+end
+OverlapParams={}
+function OverlapParams.new()
+    return {FilterType=Enum.RaycastFilterType.Exclude,FilterDescendantsInstances={},
+        CollisionGroup="Default",RespectCanCollide=false,MaxParts=0}
+end
+local function isFiltered(part,params)
+    if not params then return false end
+    local listed=false
+    for _,root in ipairs(params.FilterDescendantsInstances or {}) do
+        if part==root or part:IsDescendantOf(root) then listed=true;break end
+    end
+    local filter=params.FilterType
+    local include=(filter==Enum.RaycastFilterType.Include or filter==Enum.RaycastFilterType.Whitelist)
+    return include and not listed or not include and listed
+end
+local function rayBox(origin,direction,center,size)
+    local min={center.X-size.X/2,center.Y-size.Y/2,center.Z-size.Z/2}
+    local max={center.X+size.X/2,center.Y+size.Y/2,center.Z+size.Z/2}
+    local o={origin.X,origin.Y,origin.Z};local d={direction.X,direction.Y,direction.Z}
+    local tmin,tmax=-math.huge,math.huge;local normal=Vector3.zero
+    for axis=1,3 do
+        if math.abs(d[axis])<1e-9 then
+            if o[axis]<min[axis] or o[axis]>max[axis] then return nil end
+        else
+            local a=(min[axis]-o[axis])/d[axis]
+            local b=(max[axis]-o[axis])/d[axis]
+            local sign=-1
+            if a>b then a,b=b,a;sign=1 end
+            if a>tmin then
+                tmin=a
+                normal=axis==1 and Vector3.new(sign,0,0) or axis==2 and Vector3.new(0,sign,0) or Vector3.new(0,0,sign)
+            end
+            tmax=math.min(tmax,b)
+            if tmin>tmax then return nil end
+        end
+    end
+    local t=tmin>=0 and tmin or tmax
+    if t<0 or t>1 then return nil end
+    return t,normal
+end
+local function allParts(root)
+    local result={}
+    for _,item in ipairs(root:GetDescendants()) do if item:IsA("BasePart") then table.insert(result,item) end end
+    return result
+end
+function InstanceMethods:Raycast(origin,direction,params)
+    assert(self.ClassName=="Workspace","Raycast is only available on Workspace")
+    local length=direction.Magnitude
+    if length==0 then return nil end
+    local best,bestNormal,bestT=nil,nil,math.huge
+    for _,part in ipairs(allParts(self)) do
+        if part.CanQuery~=false and not isFiltered(part,params) then
+            local t,normal=rayBox(origin,direction,part.Position,part.Size)
+            if t and t<bestT then best,bestNormal,bestT=part,normal,t end
+        end
+    end
+    if not best then return nil end
+    return {Instance=best,Position=origin+direction*bestT,Normal=bestNormal,
+        Distance=length*bestT,Material=best.Material or Enum.Material.Plastic}
+end
+function InstanceMethods:GetPartBoundsInRadius(position,radius,params)
+    local result={}
+    for _,part in ipairs(allParts(self)) do
+        if not isFiltered(part,params) then
+            local closest=Vector3.new(
+                math.max(part.Position.X-part.Size.X/2,math.min(position.X,part.Position.X+part.Size.X/2)),
+                math.max(part.Position.Y-part.Size.Y/2,math.min(position.Y,part.Position.Y+part.Size.Y/2)),
+                math.max(part.Position.Z-part.Size.Z/2,math.min(position.Z,part.Position.Z+part.Size.Z/2)))
+            if (closest-position).Magnitude<=radius then table.insert(result,part) end
+        end
+    end
+    return result
+end
+function InstanceMethods:GetPartBoundsInBox(cf,size,params)
+    local result={};local center=cf.Position
+    for _,part in ipairs(allParts(self)) do
+        if not isFiltered(part,params) and
+            math.abs(part.Position.X-center.X)<=(part.Size.X+size.X)/2 and
+            math.abs(part.Position.Y-center.Y)<=(part.Size.Y+size.Y)/2 and
+            math.abs(part.Position.Z-center.Z)<=(part.Size.Z+size.Z)/2 then table.insert(result,part) end
+    end
+    return result
+end
+
 -- Enum members are lightweight typed values; unsupported engine behavior is not simulated.
 local EnumTypes={}
 local EnumTypeMT={}
