@@ -23,6 +23,7 @@ local Vector3Methods={}
 local Vector3MT={}
 Vector3MT.__index=function(self,key)
     if key=="Magnitude" then return math.sqrt(self.X*self.X+self.Y*self.Y+self.Z*self.Z) end
+    if key=="Unit" then local m=self.Magnitude;return m==0 and Vector3.zero or self/m end
     return Vector3Methods[key]
 end
 Vector3MT.__add=function(a,b) return Vector3.new(a.X+b.X,a.Y+b.Y,a.Z+b.Z) end
@@ -129,6 +130,7 @@ Vector2={new=function(x,y) return setmetatable({X=x or 0,Y=y or 0},Vector2MT) en
 Vector2.zero=Vector2.new(0,0);Vector2.one=Vector2.new(1,1)
 Vector2.xAxis=Vector2.new(1,0);Vector2.yAxis=Vector2.new(0,1)
 
+local CFrameMT
 local function makeCFrame(position,r00,r01,r02,r10,r11,r12,r20,r21,r22)
     return setmetatable({_position=position or Vector3.zero,
         R00=r00 or 1,R01=r01 or 0,R02=r02 or 0,
