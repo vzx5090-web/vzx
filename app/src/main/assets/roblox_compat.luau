@@ -588,25 +588,49 @@ function Instance.new(class)
     end
     return x
 end
+local function serviceInstance(name)
+    local service=Instance.new("Folder")
+    rawset(service,"ClassName",name)
+    service.Name=name
+    return service
+end
 workspace=Instance.new("Workspace");workspace.Name="Workspace";workspace.Gravity=196.2
-workspace.CurrentCamera={Name="Camera",CFrame=CFrame.new(0,5,16),FieldOfView=70,ViewportSize=Vector2.new(360,720)}
-game={Name="DataModel",PlaceId=0,JobId="studio-mobile-preview",GameId=0}
+workspace.CurrentCamera=Instance.new("Camera")
+workspace.CurrentCamera.Name="Camera"
+workspace.CurrentCamera.CFrame=CFrame.new(0,5,16)
+workspace.CurrentCamera.FieldOfView=70
+workspace.CurrentCamera.ViewportSize=Vector2.new(360,720)
+game=Instance.new("DataModel")
+game.Name="game";game.PlaceId=0;game.JobId="studio-mobile-preview";game.GameId=0
 local services={}
-local playersService={Name="Players",PlayerAdded=signal(),PlayerRemoving=signal(),CharacterAutoLoads=true}
-local localPlayer={Name="LocalPlayer",DisplayName="Local Player",UserId=1,AccountAge=0,MembershipType=Enum.MembershipType.None}
-localPlayer.PlayerGui=Instance.new("PlayerGui");localPlayer.Character=Instance.new("Model");localPlayer.Character.Name="Character"
+local playersService=serviceInstance("Players")
+playersService.PlayerAdded=signal();playersService.PlayerRemoving=signal();playersService.CharacterAutoLoads=true
+local localPlayer=Instance.new("Player")
+localPlayer.Name="LocalPlayer";localPlayer.DisplayName="Local Player";localPlayer.UserId=1
+localPlayer.AccountAge=0;localPlayer.MembershipType=Enum.MembershipType.None
+localPlayer.PlayerGui=Instance.new("PlayerGui")
+localPlayer.PlayerGui.Name="PlayerGui";localPlayer.PlayerGui.Parent=localPlayer
+localPlayer.Character=Instance.new("Model");localPlayer.Character.Name="Character"
 local rootPart=Instance.new("Part");rootPart.Name="HumanoidRootPart";rootPart.Parent=localPlayer.Character
 local humanoid=Instance.new("Humanoid");humanoid.Parent=localPlayer.Character
-function localPlayer:FindFirstChild(name) if name=="PlayerGui" then return self.PlayerGui end;return self.Character and self.Character:FindFirstChild(name) end
-function playersService:GetPlayers() return {localPlayer} end
-function playersService:GetPlayerFromCharacter(character) return character==localPlayer.Character and localPlayer or nil end
+localPlayer.Parent=playersService
+function localPlayer:FindFirstChild(name,recursive)
+    local direct=InstanceMethods.FindFirstChild(self,name,recursive)
+    if direct then return direct end
+    return self.Character and self.Character:FindFirstChild(name,recursive)
+end
+function playersService:GetPlayers() return self:GetChildren() end
+function playersService:GetPlayerFromCharacter(character)
+    for _,player in ipairs(self:GetPlayers()) do if player.Character==character then return player end end
+end
 playersService.LocalPlayer=localPlayer
-local runService={Name="RunService",Heartbeat=signal(),RenderStepped=signal(),Stepped=signal()}
+local runService=serviceInstance("RunService")
+runService.Heartbeat=signal();runService.RenderStepped=signal();runService.Stepped=signal()
 function runService:IsStudio() return true end
 function runService:IsClient() return true end
 function runService:IsServer() return false end
 function runService:IsRunning() return true end
-local tweenService={Name="TweenService"}
+local tweenService=serviceInstance("TweenService")
 function tweenService:Create(object,info,goals)
     local tween={Instance=object,Info=info,PlaybackState=Enum.PlaybackState.Begin,Completed=signal()}
     function tween:Play()
@@ -619,9 +643,10 @@ function tweenService:Create(object,info,goals)
     function tween:Destroy() end
     return tween
 end
-local debris={Name="Debris"}
+local debris=serviceInstance("Debris")
 function debris:AddItem(object,lifetime) if lifetime and lifetime<=0 and object and object.Destroy then object:Destroy() end end
-local collectionService={Name="CollectionService",_tags={}}
+local collectionService=serviceInstance("CollectionService")
+collectionService._tags={}
 function collectionService:AddTag(object,tag)
     self._tags[tag]=self._tags[tag] or {};self._tags[tag][object]=true
 end
@@ -634,7 +659,7 @@ function collectionService:GetTagged(tag)
     local result={};for object in pairs(self._tags[tag] or {}) do table.insert(result,object) end;return result
 end
 local function makeFolderService(name)
-    local s=Instance.new("Folder");s.Name=name;return s
+    return serviceInstance(name)
 end
 local lighting=makeFolderService("Lighting");lighting.Brightness=2;lighting.ClockTime=14;lighting.FogEnd=100000
 local replicatedStorage=makeFolderService("ReplicatedStorage")
@@ -648,32 +673,35 @@ local dataStores={}
 local function getDataStore(name)
     if dataStores[name] then return dataStores[name] end
     local values={}
-    return {
-        Name=name,
-        GetAsync=function(_,key) return values[tostring(key)] end,
-        SetAsync=function(_,key,value) values[tostring(key)]=value end,
-        RemoveAsync=function(_,key) local old=values[tostring(key)];values[tostring(key)]=nil;return old end,
-        UpdateAsync=function(_,key,transform) local k=tostring(key);local nextValue=transform(values[k]);values[k]=nextValue;return nextValue end
-    }
+    local store=serviceInstance("DataStore")
+    store.Name=name
+    function store:GetAsync(key) return values[tostring(key)] end
+    function store:SetAsync(key,value) values[tostring(key)]=value end
+    function store:RemoveAsync(key) local old=values[tostring(key)];values[tostring(key)]=nil;return old end
+    function store:UpdateAsync(key,transform) local k=tostring(key);local nextValue=transform(values[k]);values[k]=nextValue;return nextValue end
+    dataStores[name]=store
+    return store
 end
-local dataStoreService={Name="DataStoreService"}
+local dataStoreService=serviceInstance("DataStoreService")
 function dataStoreService:GetDataStore(name)
     local key=tostring(name)
     if not dataStores[key] then dataStores[key]=getDataStore(key) end
     return dataStores[key]
 end
 function dataStoreService:GetGlobalDataStore() return self:GetDataStore("Global") end
-game.Workspace=workspace
+local known={
+    Workspace=workspace,Players=playersService,RunService=runService,TweenService=tweenService,Debris=debris,
+    CollectionService=collectionService,Lighting=lighting,ReplicatedStorage=replicatedStorage,
+    ServerStorage=serverStorage,ServerScriptService=serverScriptService,StarterGui=starterGui,
+    StarterPack=starterPack,SoundService=soundService,Teams=teams,DataStoreService=dataStoreService
+}
+for name,service in pairs(known) do service.Parent=game end
 function game:GetService(name)
-    if name=="Workspace" then return workspace end
-    local known={
-        Players=playersService,RunService=runService,TweenService=tweenService,Debris=debris,
-        CollectionService=collectionService,Lighting=lighting,ReplicatedStorage=replicatedStorage,
-        ServerStorage=serverStorage,ServerScriptService=serverScriptService,StarterGui=starterGui,
-        StarterPack=starterPack,SoundService=soundService,Teams=teams,DataStoreService=dataStoreService
-    }
     if known[name] then return known[name] end
-    if not services[name] then services[name]={Name=name} end
+    if not services[name] then
+        services[name]=serviceInstance(name)
+        services[name].Parent=game
+    end
     return services[name]
 end
 function game:FindService(name) return self:GetService(name) end
