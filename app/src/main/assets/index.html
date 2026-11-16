@@ -684,7 +684,7 @@ function geminiContextSnapshot(){
 function captureGeminiViewport(){
  try{
   const canvas=$('viewport3d'),gl=glState?.gl;if(!canvas||!gl||!canvas.width||!canvas.height)return '';
-  const w=canvas.width,h=canvas.height,pixels=new Uint8Array(w*h*4);gl.finish();gl.readPixels(0,0,w,h,gl.RGBA,gl.UNSIGNED_BYTE,pixels);
+  const w=canvas.width,h=canvas.height;renderViewportFrame();const pixels=new Uint8Array(w*h*4);gl.finish();gl.readPixels(0,0,w,h,gl.RGBA,gl.UNSIGNED_BYTE,pixels);
   const flipped=new Uint8ClampedArray(pixels.length),rowBytes=w*4;
   for(let y=0;y<h;y++)flipped.set(pixels.subarray((h-1-y)*rowBytes,(h-y)*rowBytes),y*rowBytes);
   const c=document.createElement('canvas');c.width=w;c.height=h;const cx=c.getContext('2d'),frame=cx.createImageData(w,h);frame.data.set(flipped);cx.putImageData(frame,0,0);
