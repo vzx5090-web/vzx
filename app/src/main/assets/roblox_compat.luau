@@ -280,6 +280,8 @@ end
 NumberRange={}
 function NumberRange.new(min,max) return {Min=min or 0,Max=max or min or 0} end
 
+local InstanceMethods={}
+
 RaycastParams={}
 function RaycastParams.new()
     return {FilterType=Enum.RaycastFilterType.Exclude,FilterDescendantsInstances={},
@@ -404,7 +406,6 @@ function BrickColor.fromColor3(color) return makeBrickColor(color:ToHex(),color.
 BrickColor.White=BrickColor.new("White");BrickColor.Black=BrickColor.new("Black")
 BrickColor.Gray=BrickColor.new("Medium stone grey");BrickColor.Red=BrickColor.new("Bright red")
 
-local InstanceMethods={}
 local InstanceMT={}
 local function descendants(root,out) for _,c in ipairs(root._children) do table.insert(out,c);descendants(c,out) end end
 InstanceMT.__index=function(self,key)

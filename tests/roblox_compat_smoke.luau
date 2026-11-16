@@ -40,8 +40,15 @@ assert(game:GetService("RunService"):IsStudio())
 assert(game:GetService("Workspace")==workspace)
 
 local players=game:GetService("Players")
+assert(typeof(game)=="Instance")
+assert(typeof(players)=="Instance")
 assert(players.LocalPlayer.UserId==1)
-assert(players.LocalPlayer:FindFirstChild("HumanoidRootPart"))
+local localPlayer=players.LocalPlayer
+assert(localPlayer:FindFirstChild("HumanoidRootPart"))
+assert(players:FindFirstChild("LocalPlayer")==localPlayer)
+assert(game:FindFirstChild("Workspace")==workspace)
+assert(workspace:FindFirstChild("SmokeFolder")==folder)
+assert(game:GetService("HttpService"):FindFirstChild("Anything")==nil)
 local localPlayer=players.LocalPlayer
 
 assert(typeof(players)=="Instance")
