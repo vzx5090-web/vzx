@@ -141,3 +141,11 @@ assert(string.find(__StudioMobileExportScene(), '"name":"SmokeSpawn"', 1, true))
 print("ROBLOX_SCENE_EXPORT_OK")
 print("USER_SCRIPT_PART_CREATION_OK")
 print("SPAWNLOCATION_BASEPART_OK")
+local zeroHeightFloor = Instance.new("Part")
+zeroHeightFloor.Name = "ZeroHeightBaseplate"
+zeroHeightFloor.Position = Vector3.new(0,-0.5,0)
+zeroHeightFloor.Size = Vector3.new(128,1,128)
+zeroHeightFloor.Anchored = true
+zeroHeightFloor.Parent = workspace
+assert(zeroHeightFloor.Position.Y + zeroHeightFloor.Size.Y/2 == 0)
+print("ZERO_HEIGHT_BASEPLATE_GEOMETRY_OK")

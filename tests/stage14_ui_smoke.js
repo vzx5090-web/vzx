@@ -30,4 +30,12 @@ for (const id of ids) {
 if ((script.match(/querySelectorAll\('\[data-panel\]'\)/g) || []).length !== 1) {
   throw new Error('Mobile panel handler must be bound exactly once');
 }
+if (!html.includes("let best=null") && !script.includes("let best=null")) throw new Error('Missing feature: '+ "let best=null");
+if (!html.includes("support!==null") && !script.includes("support!==null")) throw new Error('Missing feature: '+ "support!==null");
+if (!html.includes("nextBottom<=landingFloor") && !script.includes("nextBottom<=landingFloor")) throw new Error('Missing feature: '+ "nextBottom<=landingFloor");
+if (!html.includes("name:'StarterBuilding',className:'Model'") && !script.includes("name:'StarterBuilding',className:'Model'")) throw new Error('Missing feature: '+ "name:'StarterBuilding',className:'Model'");
+if (!html.includes("captureGeminiViewport") && !script.includes("captureGeminiViewport")) throw new Error('Missing feature: '+ "captureGeminiViewport");
+if (!html.includes("gemini-3.8-flash") && !script.includes("gemini-3.8-flash")) throw new Error('Missing feature: '+ "gemini-3.8-flash");
+if (!html.includes("id=\"geminiBtn\"") && !script.includes("id=\"geminiBtn\"")) throw new Error('Missing feature: '+ "id=\"geminiBtn\"");
+if (!html.includes("askGemini(payload,context,image,id)") && !script.includes("askGemini(payload,context,image,id)")) throw new Error('Missing feature: '+ "askGemini(payload,context,image,id)");
 console.log('STUDIO_MOBILE_UI_SMOKE_OK');
