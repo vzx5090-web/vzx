@@ -528,12 +528,13 @@ function InstanceMethods:GetPivot()
 end
 function InstanceMethods:PivotTo(target)
     assert(getmetatable(target)==CFrameMT,"PivotTo expects a CFrame")
-    self._pivot=target
     if self:IsA("BasePart") then self.CFrame=target;return end
-    local delta=target*self:GetPivot():Inverse()
+    local oldPivot=self:GetPivot()
+    local delta=target*oldPivot:Inverse()
     for _,child in ipairs(self:GetDescendants()) do
         if child:IsA("BasePart") then child.CFrame=delta*child.CFrame end
     end
+    self._pivot=target
 end
 function InstanceMethods:MoveTo(position)
     if self:IsA("BasePart") then self.Position=position;return end
