@@ -10,6 +10,7 @@ assert(part:IsA("BasePart"))
 assert(folder:FindFirstChild("SmokePart")==part)
 assert(part:GetAttribute("Build")==9)
 assert(part:GetFullName()=="Workspace.SmokeFolder.SmokePart")
+assert(workspace:GetFullName()=="Workspace")
 
 local rayHit=workspace:Raycast(Vector3.new(1,2,10),Vector3.new(0,0,-20))
 assert(rayHit and rayHit.Instance==part)

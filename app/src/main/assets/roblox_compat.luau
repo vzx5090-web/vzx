@@ -499,7 +499,9 @@ function InstanceMethods:FindFirstChild(name,recursive)
     if recursive then for _,c in ipairs(self._children) do local x=c:FindFirstChild(name,true);if x then return x end end end
 end
 function InstanceMethods:GetFullName()
-    local t={self.Name};local p=self.Parent;while p do table.insert(t,1,p.Name);p=p.Parent end;return table.concat(t,".")
+    local t={self.Name};local p=self.Parent
+    while p and p.ClassName~="DataModel" do table.insert(t,1,p.Name);p=p.Parent end
+    return table.concat(t,".")
 end
 function InstanceMethods:SetAttribute(k,v)
     local old=self._attributes[k];self._attributes[k]=v
