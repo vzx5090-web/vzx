@@ -300,6 +300,9 @@ InstanceMT.__index=function(self,key)
     if key=="ChildRemoved" then return rawget(self,"_childRemoved") end
     if key=="DescendantAdded" then return rawget(self,"_descAdded") end
     if key=="DescendantRemoving" then return rawget(self,"_descRemoving") end
+    if key=="Changed" then return rawget(self,"_changed") end
+    if key=="Touched" then return rawget(self,"_touched") end
+    if key=="TouchEnded" then return rawget(self,"_touchEnded") end
     return InstanceMethods[key] or rawget(self,key)
 end
 InstanceMT.__newindex=function(self,key,value)
@@ -322,15 +325,55 @@ InstanceMT.__newindex=function(self,key,value)
         end
         return
     end
+    local previous=rawget(self,key)
     rawset(self,key,value)
+    if previous~=value then
+        if self._changed then self._changed:Fire(key) end
+        local changed=self._propertySignals and self._propertySignals[key]
+        if changed then changed:Fire() end
+    end
 end
 function InstanceMethods:IsA(class)
     if self.ClassName==class or class=="Instance" then return true end
-    if class=="BasePart" and (self.ClassName=="Part" or self.ClassName=="MeshPart") then return true end
+    local inheritance={
+        Part={"BasePart","PVInstance"},MeshPart={"BasePart","PVInstance"},UnionOperation={"BasePart","PVInstance"},
+        Model={"PVInstance"},Tool={"BackpackItem"},HopperBin={"BackpackItem"},
+        Frame={"GuiObject","GuiBase2d"},TextLabel={"GuiObject","GuiBase2d"},TextButton={"GuiButton","GuiObject","GuiBase2d"},
+        ImageLabel={"GuiObject","GuiBase2d"},ImageButton={"GuiButton","GuiObject","GuiBase2d"},
+        ScreenGui={"LayerCollector","GuiBase2d"},BillboardGui={"LayerCollector","GuiBase3d"}
+    }
+    for _,base in ipairs(inheritance[self.ClassName] or {}) do if base==class then return true end end
     return false
 end
 function InstanceMethods:GetChildren() return table.clone(self._children) end
 function InstanceMethods:GetDescendants() local t={};descendants(self,t);return t end
+function InstanceMethods:FindFirstChildOfClass(class)
+    for _,child in ipairs(self._children) do if child:IsA(class) then return child end end
+end
+function InstanceMethods:FindFirstChildWhichIsA(class,recursive)
+    for _,child in ipairs(self._children) do if child:IsA(class) then return child end end
+    if recursive then for _,child in ipairs(self._children) do local found=child:FindFirstChildWhichIsA(class,true);if found then return found end end end
+end
+function InstanceMethods:WaitForChild(name,_timeout) return self:FindFirstChild(name) end
+function InstanceMethods:IsDescendantOf(ancestor)
+    local parent=self.Parent
+    while parent do if parent==ancestor then return true end;parent=parent.Parent end
+    return false
+end
+function InstanceMethods:GetPropertyChangedSignal(name)
+    self._propertySignals[name]=self._propertySignals[name] or signal()
+    return self._propertySignals[name]
+end
+function InstanceMethods:GetAttributeChangedSignal(name)
+    self._attributeSignals[name]=self._attributeSignals[name] or signal()
+    return self._attributeSignals[name]
+end
+function InstanceMethods:GetAttributes()
+    local result={};for key,value in pairs(self._attributes) do result[key]=value end;return result
+end
+function InstanceMethods:ClearAllChildren()
+    for _,child in ipairs(table.clone(self._children)) do child:Destroy() end
+end
 function InstanceMethods:FindFirstChild(name,recursive)
     for _,c in ipairs(self._children) do if c.Name==name then return c end end
     if recursive then for _,c in ipairs(self._children) do local x=c:FindFirstChild(name,true);if x then return x end end end
@@ -338,21 +381,56 @@ end
 function InstanceMethods:GetFullName()
     local t={self.Name};local p=self.Parent;while p do table.insert(t,1,p.Name);p=p.Parent end;return table.concat(t,".")
 end
-function InstanceMethods:SetAttribute(k,v) self._attributes[k]=v end
+function InstanceMethods:SetAttribute(k,v)
+    local old=self._attributes[k];self._attributes[k]=v
+    if old~=v and self._attributeSignals[k] then self._attributeSignals[k]:Fire() end
+end
 function InstanceMethods:GetAttribute(k) return self._attributes[k] end
-function InstanceMethods:Destroy() self.Parent=nil;self._destroyed=true end
+function InstanceMethods:RemoveAttribute(k) self:SetAttribute(k,nil) end
+function InstanceMethods:Destroy() self:ClearAllChildren();self.Parent=nil;self._destroyed=true end
+function InstanceMethods:GetPivot()
+    if self:IsA("BasePart") then return self.CFrame end
+    return self._pivot or CFrame.new()
+end
+function InstanceMethods:PivotTo(target)
+    assert(getmetatable(target)==CFrameMT,"PivotTo expects a CFrame")
+    self._pivot=target
+    if self:IsA("BasePart") then self.CFrame=target;return end
+    local delta=target*self:GetPivot():Inverse()
+    for _,child in ipairs(self:GetDescendants()) do
+        if child:IsA("BasePart") then child.CFrame=delta*child.CFrame end
+    end
+end
+function InstanceMethods:MoveTo(position)
+    if self:IsA("BasePart") then self.Position=position;return end
+    local pivot=self:GetPivot();self:PivotTo(CFrame.new(position)*pivot.Rotation)
+end
+function InstanceMethods:GetTouchingParts() return {} end
+function InstanceMethods:BreakJoints() end
 function InstanceMethods:Clone()
     local c=Instance.new(self.ClassName);c.Name=self.Name
     for k,v in pairs(self._attributes) do c._attributes[k]=v end
-    for _,k in ipairs({"Position","Size","Color","Anchored"}) do c[k]=self[k] end
+    for k,v in pairs(self) do
+        if string.sub(k,1,1)~="_" and k~="ClassName" and k~="Name" and k~="Parent" then c[k]=v end
+    end
     for _,child in ipairs(self._children) do child:Clone().Parent=c end
     return c
 end
 Instance={}
 function Instance.new(class)
     local x=setmetatable({_isInstance=true,ClassName=class,Name=class,_parent=nil,_children={},_attributes={},
-        _childAdded=signal(),_childRemoved=signal(),_descAdded=signal(),_descRemoving=signal()},InstanceMT)
-    if class=="Part" or class=="MeshPart" then x.Position=Vector3.zero;x.Size=Vector3.new(4,1,4);x.Color="#4aa3c7";x.Anchored=true end
+        _propertySignals={},_attributeSignals={},_childAdded=signal(),_childRemoved=signal(),_descAdded=signal(),
+        _descRemoving=signal(),_changed=signal(),_touched=signal(),_touchEnded=signal()},InstanceMT)
+    if class=="Part" or class=="MeshPart" or class=="UnionOperation" then
+        x.Position=Vector3.zero;x.CFrame=CFrame.new();x.Size=Vector3.new(4,1,4)
+        x.Color=Color3.fromRGB(74,163,199);x.Anchored=true;x.CanCollide=true;x.CanTouch=true
+        x.CanQuery=true;x.Transparency=0;x.Reflectance=0;x.Material=Enum.Material.Plastic
+    elseif class=="Model" then x._pivot=CFrame.new()
+    elseif class=="Humanoid" then x.Health=100;x.MaxHealth=100;x.WalkSpeed=16;x.JumpPower=50;x.HipHeight=2
+    elseif class=="Frame" or class=="TextLabel" or class=="TextButton" or class=="ImageLabel" or class=="ImageButton" then
+        x.Size=UDim2.new(0,100,0,50);x.Position=UDim2.zero;x.Visible=true;x.BackgroundTransparency=0
+    elseif class=="ScreenGui" then x.Enabled=true;x.ResetOnSpawn=true
+    end
     return x
 end
 workspace=Instance.new("Workspace");workspace.Name="Workspace"
