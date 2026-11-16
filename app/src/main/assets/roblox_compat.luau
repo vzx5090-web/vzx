@@ -250,6 +250,28 @@ function UDim2.fromScale(x,y) return UDim2.new(x,0,y,0) end
 function UDim2.fromOffset(x,y) return UDim2.new(0,x,0,y) end
 UDim2.zero=UDim2.new(0,0,0,0)
 
+TweenInfo={}
+function TweenInfo.new(duration,style,direction,repeatCount,reverses,delayTime)
+    return {Time=duration or 1,EasingStyle=style or Enum.EasingStyle.Quad,
+        EasingDirection=direction or Enum.EasingDirection.Out,RepeatCount=repeatCount or 0,
+        Reverses=reverses or false,DelayTime=delayTime or 0}
+end
+local NumberSequenceKeypoint={}
+function NumberSequenceKeypoint.new(time,value,envelope) return {Time=time,Value=value,Envelope=envelope or 0} end
+NumberSequence={}
+function NumberSequence.new(value)
+    if type(value)=="number" then return {Keypoints={NumberSequenceKeypoint.new(0,value),NumberSequenceKeypoint.new(1,value)}} end
+    return {Keypoints=value}
+end
+local ColorSequenceKeypoint={}
+function ColorSequenceKeypoint.new(time,value) return {Time=time,Value=value} end
+ColorSequence={}
+function ColorSequence.new(a,b)
+    if b then return {Keypoints={ColorSequenceKeypoint.new(0,a),ColorSequenceKeypoint.new(1,b)}} end
+    if getmetatable(a)==Color3MT then return {Keypoints={ColorSequenceKeypoint.new(0,a),ColorSequenceKeypoint.new(1,a)}} end
+    return {Keypoints=a}
+end
+
 Rect={}
 function Rect.new(minX,minY,maxX,maxY)
     local min=Vector2.new(minX,minY);local max=Vector2.new(maxX,maxY)
@@ -415,6 +437,38 @@ function InstanceMethods:MoveTo(position)
 end
 function InstanceMethods:GetTouchingParts() return {} end
 function InstanceMethods:BreakJoints() end
+
+function InstanceMethods:Fire(...)
+    assert(self.ClassName=="BindableEvent","Fire is only valid on BindableEvent")
+    self.Event:Fire(...)
+end
+function InstanceMethods:FireServer(...)
+    assert(self.ClassName=="RemoteEvent","FireServer is only valid on RemoteEvent")
+    self.OnServerEvent:Fire(game:GetService("Players").LocalPlayer,...)
+end
+function InstanceMethods:FireClient(player,...)
+    assert(self.ClassName=="RemoteEvent","FireClient is only valid on RemoteEvent")
+    if player==game:GetService("Players").LocalPlayer then self.OnClientEvent:Fire(...) end
+end
+function InstanceMethods:FireAllClients(...)
+    assert(self.ClassName=="RemoteEvent","FireAllClients is only valid on RemoteEvent")
+    self.OnClientEvent:Fire(...)
+end
+function InstanceMethods:InvokeServer(...)
+    assert(self.ClassName=="RemoteFunction","InvokeServer is only valid on RemoteFunction")
+    assert(type(self.OnServerInvoke)=="function","OnServerInvoke is not set")
+    return self.OnServerInvoke(game:GetService("Players").LocalPlayer,...)
+end
+function InstanceMethods:InvokeClient(player,...)
+    assert(self.ClassName=="RemoteFunction","InvokeClient is only valid on RemoteFunction")
+    assert(type(self.OnClientInvoke)=="function","OnClientInvoke is not set")
+    if player==game:GetService("Players").LocalPlayer then return self.OnClientInvoke(...) end
+end
+function InstanceMethods:Invoke(...)
+    assert(self.ClassName=="BindableFunction","Invoke is only valid on BindableFunction")
+    assert(type(self.OnInvoke)=="function","OnInvoke is not set")
+    return self.OnInvoke(...)
+end
 function InstanceMethods:Clone()
     local c=Instance.new(self.ClassName);c.Name=self.Name
     for k,v in pairs(self._attributes) do c._attributes[k]=v end
@@ -438,6 +492,10 @@ function Instance.new(class)
     elseif class=="Frame" or class=="TextLabel" or class=="TextButton" or class=="ImageLabel" or class=="ImageButton" then
         x.Size=UDim2.new(0,100,0,50);x.Position=UDim2.zero;x.Visible=true;x.BackgroundTransparency=0
     elseif class=="ScreenGui" then x.Enabled=true;x.ResetOnSpawn=true
+    elseif class=="RemoteEvent" then x.OnServerEvent=signal();x.OnClientEvent=signal()
+    elseif class=="BindableEvent" then x.Event=signal()
+    elseif class=="RemoteFunction" then x.OnServerInvoke=nil;x.OnClientInvoke=nil
+    elseif class=="BindableFunction" then x.OnInvoke=nil
     end
     return x
 end
@@ -497,7 +555,9 @@ local starterGui=makeFolderService("StarterGui")
 local starterPack=makeFolderService("StarterPack")
 local soundService=makeFolderService("SoundService")
 local teams=makeFolderService("Teams")
+local dataStores={}
 local function getDataStore(name)
+    if dataStores[name] then return dataStores[name] end
     local values={}
     return {
         Name=name,
@@ -508,8 +568,12 @@ local function getDataStore(name)
     }
 end
 local dataStoreService={Name="DataStoreService"}
-function dataStoreService:GetDataStore(name) return getDataStore(name) end
-function dataStoreService:GetGlobalDataStore() return getDataStore("Global") end
+function dataStoreService:GetDataStore(name)
+    local key=tostring(name)
+    if not dataStores[key] then dataStores[key]=getDataStore(key) end
+    return dataStores[key]
+end
+function dataStoreService:GetGlobalDataStore() return self:GetDataStore("Global") end
 game.Workspace=workspace
 function game:GetService(name)
     if name=="Workspace" then return workspace end
@@ -537,3 +601,9 @@ function task.spawn(fn,...) return fn(...) end
 function task.defer(fn,...) return fn(...) end
 function task.delay(_,fn,...) return fn(...) end
 function task.cancel(_) end
+wait=task.wait
+spawn=task.spawn
+delay=task.delay
+function tick() return os.clock() end
+function time() return os.clock() end
+function warn(...) print("[Warn]",...) end
