@@ -30,6 +30,28 @@ local mixed=color:Lerp(Color3.new(0,0,1),0.5)
 assert(math.abs(mixed.R-0.5)<0.000001 and mixed.B==0.5)
 assert(game:GetService("RunService"):IsStudio())
 assert(game:GetService("Workspace")==workspace)
+
+local players=game:GetService("Players")
+assert(players.LocalPlayer.UserId==1)
+assert(players.LocalPlayer:FindFirstChild("HumanoidRootPart"))
+local tagged=Instance.new("Part")
+local tags=game:GetService("CollectionService")
+tags:AddTag(tagged,"BuildPiece")
+assert(tags:HasTag(tagged,"BuildPiece") and #tags:GetTagged("BuildPiece")==1)
+local propertyChanged=false
+tagged:GetPropertyChangedSignal("Anchored"):Connect(function() propertyChanged=true end)
+tagged.Anchored=false
+assert(propertyChanged==true)
+local tween=game:GetService("TweenService"):Create(tagged,nil,{Transparency=0.5})
+tween:Play()
+assert(tagged.Transparency==0.5)
+local model=Instance.new("Model")
+local modelPart=Instance.new("Part");modelPart.Parent=model
+model:PivotTo(CFrame.new(10,0,0))
+assert(math.abs(modelPart.Position.X-10)<0.00001)
+local store=game:GetService("DataStoreService"):GetDataStore("Smoke")
+store:SetAsync("score",25)
+assert(store:GetAsync("score")==25)
 local fired=false
 folder.ChildAdded:Connect(function(child) fired=child.Name=="AddedChild" end)
 local child=Instance.new("Folder")
