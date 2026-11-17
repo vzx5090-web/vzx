@@ -42,21 +42,44 @@ final class MemoryStore extends SQLiteOpenHelper {
         return getWritableDatabase().insert("memories", null, v);
     }
 
-    synchronized String recall(String projectId, int limit) {
-        StringBuilder out = new StringBuilder();
+    synchronized String recall(String projectId, int limit, String query) {
+        java.util.Set<String> terms = new java.util.HashSet<>();
+        if (query != null) {
+            for (String token : query.toLowerCase().split("[^\\p{L}\\p{N}]+")) {
+                if (token.length() >= 3) terms.add(token);
+            }
+        }
+        class Row {
+            String project, kind, title, content, url;
+            long created;
+            int score;
+        }
+        java.util.List<Row> rows = new java.util.ArrayList<>();
         Cursor c = getReadableDatabase().rawQuery(
-                "SELECT kind,title,content,source_url FROM memories " +
-                "WHERE project_id=? OR project_id='global' ORDER BY id DESC LIMIT ?",
-                new String[]{projectId == null ? "global" : projectId, String.valueOf(Math.max(1, Math.min(30, limit)))});
+                "SELECT project_id,kind,title,content,source_url,created_at FROM memories ORDER BY id DESC LIMIT 400", null);
         try {
             while (c.moveToNext()) {
-                out.append("\\n[ذاكرة محفوظة / ").append(c.getString(0)).append("] ")
-                        .append(c.getString(1)).append("\\n")
-                        .append(c.getString(2)).append("\\n");
-                String url = c.getString(3);
-                if (url != null && !url.isEmpty()) out.append("المصدر: ").append(url).append("\\n");
+                Row row = new Row();
+                row.project=c.getString(0); row.kind=c.getString(1); row.title=c.getString(2);
+                row.content=c.getString(3); row.url=c.getString(4); row.created=c.getLong(5);
+                if (row.project.equals(projectId) || row.project.equals("global")) row.score += 4;
+                String hay=(row.title+" "+row.content).toLowerCase();
+                for (String term : terms) if (hay.contains(term)) row.score += 2;
+                if (row.score > 0) rows.add(row);
             }
         } finally { c.close(); }
+        java.util.Collections.sort(rows, (a,b) -> {
+            int score = Integer.compare(b.score, a.score);
+            return score != 0 ? score : Long.compare(b.created, a.created);
+        });
+        StringBuilder out = new StringBuilder();
+        int count=0;
+        for (Row row : rows) {
+            if (count++ >= Math.max(1, Math.min(18, limit))) break;
+            out.append("\n[ذاكرة / ").append(row.kind).append("] ").append(row.title)
+                    .append("\n").append(row.content).append("\n");
+            if (row.url != null && !row.url.isEmpty()) out.append("المصدر: ").append(row.url).append("\n");
+        }
         return out.toString();
     }
 

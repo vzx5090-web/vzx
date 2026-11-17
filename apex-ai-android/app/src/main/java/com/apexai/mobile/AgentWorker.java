@@ -51,7 +51,7 @@ public class AgentWorker extends Worker {
                     + (taskPrompt.isEmpty() ? "" : "\\nبرومبت المهمة الإضافي:\\n" + taskPrompt);
 
             memory.remember(id, "user_prompt", title, project, "");
-            String priorMemory = memory.recall(id, 12);
+            String priorMemory = memory.recall(id, 18, title + " " + description + " " + taskPrompt);
             String research = "";
 
             put("stage", "البحث وجمع المعلومات");
