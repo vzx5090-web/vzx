@@ -1,0 +1,1 @@
+Build trigger for APEX AI V0.2.2 with Gemini 3.8 Flash defaults.
