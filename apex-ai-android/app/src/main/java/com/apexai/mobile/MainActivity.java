@@ -84,15 +84,15 @@ public class MainActivity extends Activity {
 
         LinearLayout settings=card();marginTop(root,settings,dp(20));
         settings.addView(text("إعدادات العقل ومزود API",18,TEXT,true));
-        settings.addView(text("لا يلزمك إعداد أي شيء الآن. الإعداد الافتراضي يعمل دون مفتاح، ويمكنك لاحقاً إدخال مفتاحك وموديلك الخاص.",11,MUTED,false));
-        baseInput=edit("رابط API متوافق مع OpenAI",false);baseInput.setText(AppSettings.base(this));
-        modelInput=edit("اسم النموذج مثل code_chat@latest أو gpt-4o-mini",false);modelInput.setText(AppSettings.model(this));
-        keyInput=edit("مفتاح API (يُحفظ مشفراً على الجهاز)",false);keyInput.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        settings.addView(text("اخترنا Gemini 3.8 Flash تلقائياً. الصق مفتاح Gemini API مرة واحدة؛ سيُحفظ مشفراً على جهازك، ولا ترسله في المحادثات.",11,MUTED,false));
+        baseInput=edit("رابط Gemini API متوافق مع OpenAI",false);baseInput.setText(AppSettings.base(this));
+        modelInput=edit("اسم النموذج · الافتراضي gemini-3.8-flash",false);modelInput.setText(AppSettings.model(this));
+        keyInput=edit("الصق مفتاح Gemini API هنا — يُحفظ مشفراً",false);keyInput.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);
         instructionsInput=edit("تعليمات دائمة: أسلوب البرمجة، بنية الملفات، قواعد المشروع، ما يجب تجنبه...",true);
         instructionsInput.setText(AppSettings.instructions(this));
         settings.addView(label("عنوان API"));settings.addView(baseInput);
         settings.addView(label("النموذج"));settings.addView(modelInput);
-        settings.addView(label("مفتاح API اختياري"));settings.addView(keyInput);
+        settings.addView(label("مفتاح Gemini API (مطلوب)"));settings.addView(keyInput);
         settings.addView(label("تعليمات ثابتة يلتزم بها العقل في كل مهمة"));settings.addView(instructionsInput);
         LinearLayout settingsButtons=row();
         Button saveSettings=button("حفظ الإعدادات",CYAN,BG);Button testApi=button("اختبار الاتصال",PANEL2,TEXT);
@@ -158,7 +158,7 @@ public class MainActivity extends Activity {
         LinearLayout note=card();marginTop(root,note,dp(16));
         note.addView(text("ماذا يعني التعلّم هنا؟",14,CYAN,true));
         note.addView(text("يحفظ APEX تلقائياً البرومبتات والخطط ونتائج البحث والأكواد والمراجعات والدروس في SQLite على جهازك، ويسترجعها لاحقاً عبر ذاكرة سياقية (RAG). كما يمكنك وضع تعليمات دائمة وإضافة معلومات يدوياً. هذا يحسّن سياق العمل، لكنه لا يغيّر أوزان النموذج تلقائياً. التدريب الحقيقي Fine-tuning يحتاج مجموعة بيانات منتقاة وبيئة تدريب GPU منفصلة؛ يمكن تجهيز بياناته من الخبرات المحفوظة لاحقاً.",11,MUTED,false));
-        TextView footer=text("APEX AI · ANDROID · 0.2.0",10,MUTED,false);footer.setGravity(Gravity.CENTER);footer.setPadding(0,dp(22),0,0);root.addView(footer);
+        TextView footer=text("APEX AI · ANDROID · 0.2.2",10,MUTED,false);footer.setGravity(Gravity.CENTER);footer.setPadding(0,dp(22),0,0);root.addView(footer);
     }
 
     private void addTab(LinearLayout tabs,String title,String key){

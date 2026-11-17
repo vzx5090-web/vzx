@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 final class AppSettings {
-    static final String DEFAULT_BASE = "https://oai.endpoints.kepler.ai.cloud.ovh.net/v1";
-    static final String DEFAULT_MODEL = "code_chat@latest";
+    static final String DEFAULT_BASE = "https://generativelanguage.googleapis.com/v1beta/openai";
+    static final String DEFAULT_MODEL = "gemini-3.8-flash";
     private static final String PREFS = "apex_settings";
 
     static String get(Context c, String key, String fallback) {
@@ -19,8 +19,16 @@ final class AppSettings {
                 .putString("search_provider", clean(searchProvider, "duckduckgo"))
                 .apply();
     }
-    static String base(Context c) { return get(c, "base_url", DEFAULT_BASE); }
-    static String model(Context c) { return get(c, "model", DEFAULT_MODEL); }
+    static String base(Context c) {
+        String value = get(c, "base_url", DEFAULT_BASE);
+        if ("https://oai.endpoints.kepler.ai.cloud.ovh.net/v1".equals(value)) return DEFAULT_BASE;
+        return value;
+    }
+    static String model(Context c) {
+        String value = get(c, "model", DEFAULT_MODEL);
+        if ("code_chat@latest".equals(value)) return DEFAULT_MODEL;
+        return value;
+    }
     static String instructions(Context c) { return get(c, "instructions", ""); }
     static String searchProvider(Context c) { return get(c, "search_provider", "duckduckgo"); }
     private static String clean(String s, String fallback) {

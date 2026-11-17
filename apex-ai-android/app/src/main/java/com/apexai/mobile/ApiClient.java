@@ -12,9 +12,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 final class ApiClient {
-    private static long lastRequestAt = 0L;
     static String chat(Context context, String system, String user, int maxTokens) throws Exception {
-        waitForProviderWindow(context);
         String base = AppSettings.base(context).replaceAll("/+$", "");
         if (!base.startsWith("https://")) throw new Exception("عنوان API يجب أن يبدأ بـ HTTPS لأمان المفتاح.");
         String endpoint = base.endsWith("/chat/completions") ? base : base + "/chat/completions";
@@ -61,16 +59,6 @@ final class ApiClient {
             return content.trim();
         } finally {
             if (c != null) c.disconnect();
-        }
-    }
-
-    private static void waitForProviderWindow(Context context) throws InterruptedException {
-        boolean anonymous = SecureStore.readApiKey(context).isEmpty();
-        long minimumGap = anonymous ? 31000L : 1200L;
-        synchronized (ApiClient.class) {
-            long wait = lastRequestAt + minimumGap - System.currentTimeMillis();
-            if (wait > 0) Thread.sleep(wait);
-            lastRequestAt = System.currentTimeMillis();
         }
     }
 
