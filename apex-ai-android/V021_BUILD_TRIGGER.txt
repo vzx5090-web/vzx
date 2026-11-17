@@ -1,0 +1,1 @@
+V0.2.1 release build: anonymous request pacing and cross-project memory retrieval.
