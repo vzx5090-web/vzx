@@ -1,9 +1,9 @@
-name: Studio Mobile - Android APK and Luau VM
+name: Octane Studio Mobile - Android APK and native Luau
 
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [main, octane-studio-standalone]
 
 permissions:
   contents: read
@@ -35,7 +35,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: StudioMobile-Luau-VM-Smoke
+          name: OctaneStudioMobile-Luau-VM-Smoke
           path: build/luau-smoke.log
           if-no-files-found: ignore
           retention-days: 14
@@ -92,7 +92,7 @@ jobs:
           test -s "$APK"
           "$ANDROID_SDK_ROOT/build-tools/36.0.0/apksigner" verify --verbose --print-certs "$APK"
           "$ANDROID_SDK_ROOT/build-tools/36.0.0/aapt" dump badging "$APK" | tee apk-badging.txt
-          grep -q "package: name='com.studiomobile.app'" apk-badging.txt
+          grep -q "package: name='com.octane.studio.mobile'" apk-badging.txt
           if unzip -l "$APK" | grep -q 'lib/arm64-v8a/libstudiomobile.so'; then
             echo 'Luau native runtime: INCLUDED (arm64-v8a)' | tee APK_BUILD_MODE.txt
             unzip -l "$APK" | grep 'lib/arm64-v8a/libstudiomobile.so'
@@ -102,7 +102,7 @@ jobs:
           sha256sum "$APK" | tee APK_SHA256.txt
       - uses: actions/upload-artifact@v4
         with:
-          name: StudioMobile-Android-ARM64-APK
+          name: OctaneStudioMobile-Android-ARM64-APK
           path: |
             app/build/outputs/apk/debug/app-debug.apk
             APK_BUILD_MODE.txt
