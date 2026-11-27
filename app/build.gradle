@@ -10,11 +10,11 @@ android {
     ndkVersion '28.2.13676358'
 
     defaultConfig {
-        applicationId 'com.studiomobile.app'
+        applicationId 'com.octane.studio.mobile'
         minSdk 26
         targetSdk 35
-        versionCode 20
-        versionName '0.18.2-preview'
+        versionCode 21
+        versionName '1.0.0-mobile-preview'
         ndk { abiFilters 'arm64-v8a' }
     }
 
