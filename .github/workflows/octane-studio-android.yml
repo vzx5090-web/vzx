@@ -48,6 +48,14 @@ jobs:
           unzip -t "$APK"
           "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$APK" | grep -E "package: name='com.octane.mobile'|sdkVersion:'23'"
 
+      - name: Upload installable APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: octane-studio-mobile-debug-apk
+          path: octane-studio-android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14
+
       - name: Install and launch on Android emulator
         uses: ReactiveCircus/android-emulator-runner@v2
         with:
@@ -61,11 +69,3 @@ jobs:
             adb shell am start -n com.octane.mobile/.MainActivity
             sleep 5
             adb shell pidof com.octane.mobile
-
-      - name: Upload installable APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: octane-studio-mobile-debug-apk
-          path: octane-studio-android/app/build/outputs/apk/debug/app-debug.apk
-          if-no-files-found: error
-          retention-days: 14
