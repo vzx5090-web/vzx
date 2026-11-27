@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#11151d">
-<title>Studio Mobile — محرر مشاريع ثلاثية الأبعاد</title>
+<title>Octane Octane Studio Mobile — محرر مشاريع ثلاثية الأبعاد</title>
 <style>
 :root{--bg:#17191e;--chrome:#202329;--chrome2:#282c34;--panel:#1e2229;--panel2:#252a33;--line:#343a45;--text:#e8ebf0;--muted:#a0a7b3;--blue:#0877d1;--blue2:#2995ef;--cyan:#61c8e8;--green:#62d49a;--orange:#f3b64c;--red:#e87979;--shadow:0 12px 34px #0008;--ribbon:#252930}
 *{box-sizing:border-box}html,body{height:100%;margin:0;background:var(--bg);color:var(--text);font:13px/1.35 "Segoe UI",Roboto,system-ui,sans-serif;overflow:hidden}button,input,textarea,select{font:inherit}button{cursor:pointer;color:inherit;border:1px solid #414853;background:#303640;border-radius:4px;padding:6px 9px;min-height:30px}button:hover{background:#3b424d;border-color:#5b6675}button:active{transform:translateY(1px)}button.primary{background:#0877d1;border-color:#1689e6;color:white}button.active{background:#174d77;border-color:#2d9be8;color:#fff}button.danger{color:#ffb0b0}.hidden{display:none!important}.muted{color:var(--muted)}.spacer{flex:1;min-width:8px}
@@ -48,7 +48,7 @@
 </style></head>
 <body><div class="app">
 <header class="top">
-  <div class="brand"><b>◈</b> STUDIO <span style="color:#aab6c7">MOBILE</span></div>
+  <div class="brand"><b>◈</b> OCTANE <span style="color:#aab6c7">STUDIO MOBILE</span></div>
   <div class="project-name" id="projectLabel">Untitled Experience</div>
   <span class="spacer"></span><span class="status" id="saveStatus">● Saved</span>
   <div class="toolbar"><button class="iconbtn" title="Undo" id="undoBtn">↶</button><button class="iconbtn" title="Redo" id="redoBtn">↷</button><button class="primary" id="playBtn">▶ Play</button><button class="iconbtn" title="Gemini AI" id="geminiBtn">✦</button><button class="iconbtn" title="Save" id="saveBtn">▣</button><button class="iconbtn" title="More" id="menuBtn">⋯</button></div>
@@ -111,9 +111,9 @@ local part = workspace:FindFirstChild("Part")
 
 if part then
     part.Anchored = true
-    print("Hello from Studio Mobile")
+    print("Hello from Octane Studio Mobile")
 end</textarea></div></div><div class="editor-footer"><span id="cursorPosition">Ln 1, Col 1</span><span>UTF-8</span><span>Luau</span><span class="spacer"></span><span id="runtimeStatus">Checking Luau runtime…</span></div></div>
-  <div class="output open" id="output"><div class="output-head"><strong>Output</strong><span class="muted">Luau Preview Console</span><span class="spacer"></span><button id="clearOutput">Clear</button><button id="collapseOutput">−</button></div><div class="output-body" id="outputBody"><div class="output-line info">[Studio Mobile] Ready. Select an object or insert a Part.</div><div class="output-line warn">[Info] Standalone preview — not the Roblox engine.</div></div></div>
+  <div class="output open" id="output"><div class="output-head"><strong>Output</strong><span class="muted">Luau Preview Console</span><span class="spacer"></span><button id="clearOutput">Clear</button><button id="collapseOutput">−</button></div><div class="output-body" id="outputBody"><div class="output-line info">[Octane Studio Mobile] Ready. Select an object or insert a Part.</div><div class="output-line warn">[Info] Standalone preview — not the Roblox engine.</div></div></div>
   <div class="center-bottom"><button id="insertPart">＋ Part</button><button id="insertSpawn">＋ Spawn</button><button id="insertModel">＋ Model</button><button data-insert="Script">＋ Script</button><span class="spacer"></span><span class="muted wide" style="font-size:9px" id="selectionLabel">No selection</span></div>
  </section>
  <aside class="panel rightpanel" id="rightPanel">
@@ -126,7 +126,7 @@ end</textarea></div></div><div class="editor-footer"><span id="cursorPosition">L
 <div class="modalback" id="modalBack"><div class="modal"><h3 id="modalTitle">قائمة المشروع</h3><div id="modalContent"></div><div class="row"><button id="modalCancel">إغلاق</button><button class="primary" id="modalAction">موافق</button></div></div></div>
 <div class="gemini-panel" id="geminiPanel" hidden>
  <div class="gemini-head"><span style="font-size:19px">✦</span><div style="display:flex;flex-direction:column;gap:1px;flex:1"><strong>Gemini 3.8 Flash</strong><small id="geminiStatus" class="gemini-status">مساعد الاستديو</small></div><button id="geminiSettingsBtn">⚙ API</button><button id="geminiCloseBtn">×</button></div>
- <div class="gemini-chat" id="geminiChat"><div class="gemini-bubble ai">أنا مساعد البرمجة داخل Studio Mobile. أرسل لي طلبك، وسأراجع لقطة نافذة 3D وشجرة المشروع والسكربتات الحالية في كل رسالة.</div></div>
+ <div class="gemini-chat" id="geminiChat"><div class="gemini-bubble ai">أنا مساعد البرمجة داخل Octane Studio Mobile. أرسل لي طلبك، وسأراجع لقطة نافذة 3D وشجرة المشروع والسكربتات الحالية في كل رسالة.</div></div>
  <div class="gemini-actions" id="geminiActions" hidden><button id="geminiApplyCode" class="primary">إدراج الكود في Script</button><button id="geminiRunCode">إدراج وتشغيل في المشهد</button></div>
  <div class="gemini-compose" id="geminiComposer"><textarea id="geminiPrompt" placeholder="مثلاً: ابنِ لي قلعة حول نقطة الظهور، مع سور وأبراج..."></textarea><button class="primary" id="geminiSend">إرسال</button></div>
  <div class="gemini-settings" id="geminiSettings" hidden>
@@ -410,7 +410,7 @@ function modal(title,content,action){$('modalTitle').textContent=title;$('modalC
 function switchView(v){activeView=v;$('centerPanel').classList.toggle('editor-mode',v==='script');$('editor').classList.toggle('open',v==='script');$('scene').style.display=v==='script'?'none':'';$('output').classList.toggle('open',v==='output');$('centerTitle').textContent=v==='script'?'Script Editor':v==='output'?'Output':'Viewport';document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));if(v==='script'){loadScript();updateCodeChrome();}}
 function loadScript(){let n=find(currentScript)?.node;if(!n||!n.className.includes('Script')){n=selected();if(n&&n.className.includes('Script'))currentScript=n.id;}n=find(currentScript)?.node;if(n){$('scriptTitle').textContent=n.name;$('codeArea').value=n.source||'-- اكتب Luau هنا\n'}else{$('scriptTitle').textContent='No Script Selected';$('codeArea').value='-- حدد Script من Explorer\n'}}
 $('codeArea').addEventListener('input',()=>{let n=find(currentScript)?.node;if(n){n.source=$('codeArea').value;markDirty()}});
-function safeStorageGet(key){try{return window.localStorage.getItem(key)}catch(e){return null}}function safeStorageSet(key,value){try{window.localStorage.setItem(key,value);return true}catch(e){return false}}function saveLocal(){normalizeProject(project);let ok=safeStorageSet('studioMobileProject',JSON.stringify(project));$('saveStatus').textContent=ok?'● محفوظ محلياً':'● تعذر التخزين المحلي';$('saveStatus').style.color=ok?'var(--green)':'var(--orange)';toast(ok?'تم الحفظ على هذا الجهاز':'التخزين المحلي غير متاح؛ استخدم تصدير المشروع')}
+function safeStorageGet(key){try{return window.localStorage.getItem(key)}catch(e){return null}}function safeStorageSet(key,value){try{window.localStorage.setItem(key,value);return true}catch(e){return false}}function saveLocal(){normalizeProject(project);let ok=safeStorageSet('octaneStudioMobileProject',JSON.stringify(project));$('saveStatus').textContent=ok?'● محفوظ محلياً':'● تعذر التخزين المحلي';$('saveStatus').style.color=ok?'var(--green)':'var(--orange)';toast(ok?'تم الحفظ على هذا الجهاز':'التخزين المحلي غير متاح؛ استخدم تصدير المشروع')}
 function xmlEscape(v){return String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function xmlProp(name,type,value){if(type==='Vector3')return `<Vector3 name="${name}"><X>${value?.x||0}</X><Y>${value?.y||0}</Y><Z>${value?.z||0}</Z></Vector3>`;if(type==='Color3'){let h=value||'#4d9cff';return `<Color3 name="${name}"><R>${parseInt(h.slice(1,3),16)/255}</R><G>${parseInt(h.slice(3,5),16)/255}</G><B>${parseInt(h.slice(5,7),16)/255}</B></Color3>`}if(type==='bool')return `<bool name="${name}">${value?'true':'false'}</bool>`;if(type==='float'||type==='double')return `<${type} name="${name}">${Number(value)||0}</${type}>`;return `<string name="${name}">${xmlEscape(value)}</string>`}
 function nodeToXml(n){let props=xmlProp('Name','string',n.name)+xmlProp('Archivable','bool',n.archivable!==false);if(n.position)props+=xmlProp('Position','Vector3',n.position);if(n.size)props+=xmlProp('Size','Vector3',n.size);if(n.rotation)props+=xmlProp('Orientation','Vector3',n.rotation);if(n.color)props+=xmlProp('Color3','Color3',n.color);if(n.anchored!==undefined)props+=xmlProp('Anchored','bool',n.anchored);if(n.material)props+=xmlProp('Material','string',n.material);if(n.transparency!==undefined)props+=xmlProp('Transparency','float',n.transparency);if(n.source!==undefined)props+=`<ProtectedString name="Source">${xmlEscape(n.source)}</ProtectedString>`;return `<Item class="${xmlEscape(n.className)}" referent="${xmlEscape(n.id)}"><Properties>${props}</Properties>${(n.children||[]).map(nodeToXml).join('')}</Item>`}
@@ -422,7 +422,7 @@ function parseRbxmx(text){let doc=new DOMParser().parseFromString(text,'applicat
 
 function luauQuote(value){return '"'+String(value??'').replace(/\\/g,'\\\\').replace(/"/g,'\\"').replace(/\r/g,'\\r').replace(/\n/g,'\\n').replace(/\t/g,'\\t')+'"';}
 function makeRuntimeBootstrap(){
- let source=['-- Studio Mobile: hydrate the editor Workspace into this Luau run','__StudioMobileNodes = {}'];
+ let source=['-- Octane Studio Mobile: hydrate the editor Workspace into this Luau run','__StudioMobileNodes = {}'];
  let counter=0;
  const emit=(node,parentRef)=>{
   if(!node||!node.className)return;
@@ -659,7 +659,7 @@ $('saveBtn').onclick=saveLocal;$('playBtn').onclick=togglePlay;
 $('addPart').onclick=()=>addNode('Part');$('addFolder').onclick=()=>addNode('Folder');$('addScript').onclick=()=>addNode('Script');$('insertPart').onclick=()=>addNode('Part');$('insertSpawn').onclick=()=>addNode('SpawnLocation');$('insertModel').onclick=()=>addNode('Model');$('undoBtn').onclick=()=>{if(!undoStack.length)return;redoStack.push(clone(project));project=undoStack.pop();render();toast('تراجع')};$('redoBtn').onclick=()=>{if(!redoStack.length)return;undoStack.push(clone(project));project=redoStack.pop();render();toast('إعادة')};$('zoomIn').onclick=()=>{camera.distance=Math.max(5,camera.distance*.88);drawViewport()};$('zoomOut').onclick=()=>{camera.distance=Math.min(100,camera.distance*1.12);drawViewport()};$('resetView').onclick=()=>{camera={yaw:.72,pitch:.62,distance:24,target:[0,2,0]};drawViewport()};$('focusBtn').onclick=()=>{let n=selected();if(n?.position){camera.target=[n.position.x,n.position.y,n.position.z];drawViewport();toast('تم التركيز على '+n.name)}};
 document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>switchView(b.dataset.view));document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{activeRight=b.dataset.tab;document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x===b));renderInspector()});
 
-$('menuBtn').onclick=()=>modal('قائمة المشروع',`<div style="display:grid;gap:8px"><button id="newProject">مشروع جديد</button><button id="openProject">فتح مشروع JSON أو RBXMX أو RBXLX</button><button id="exportProject">تصدير مشروع Studio JSON</button><button id="exportRbxmx">تصدير نموذج RBXMX</button><button id="aboutApp">حول Studio Mobile</button></div>`,()=>{});$('modalAction').classList.add('hidden');
+$('menuBtn').onclick=()=>modal('قائمة المشروع',`<div style="display:grid;gap:8px"><button id="newProject">مشروع جديد</button><button id="openProject">فتح مشروع JSON أو RBXMX أو RBXLX</button><button id="exportProject">تصدير مشروع Studio JSON</button><button id="exportRbxmx">تصدير نموذج RBXMX</button><button id="aboutApp">حول Octane Octane Studio Mobile</button></div>`,()=>{});$('modalAction').classList.add('hidden');
 $('modalCancel').onclick=closeModal;
 $('modalContent').addEventListener('click',e=>{let id=e.target.id;if(id==='newProject'){closeModal();modal('مشروع جديد','<input id="newName" value="New Experience"/>',()=>{snapshot();project=sample();project.name=$('newName').value||'New Experience';project.selected='workspace';render();saveLocal()})}if(id==='openProject'){closeModal();$('openFile').click()}if(id==='exportProject'){closeModal();exportProject()}if(id==='exportRbxmx'){closeModal();exportRbxmx()}if(id==='aboutApp'){modal('حول التطبيق','<p>محرر مستقل للهاتف مع عارض 3D، تشغيل Luau لمرة واحدة، ومشاهدة Playtest محلية للتحكم بالشخصية. ليس خادم Roblox أو محركه الكامل.</p>',()=>{})}});
 $('openFile').onchange=e=>{if(e.target.files[0])importProject(e.target.files[0]);e.target.value=''};
@@ -698,7 +698,7 @@ function sendGeminiPrompt(){
  if(!AndroidBridge.hasGeminiApiKey()){showGeminiSettings(true);appendGeminiMessage('أضف مفتاح Gemini من زر API أولاً.','error');return;}
  if(geminiRequestId!==null)return;
  geminiHistory.push({role:'user',text:prompt});
- const system='You are the embedded Roblox Studio engineering assistant inside Studio Mobile. The user speaks Arabic Iraqi; reply in the user language. You receive a JSON project snapshot and a screenshot of the current 3D viewport. Inspect both before responding. If the user requests a scene build or a script, return a self-contained Luau script in the luau field using supported preview APIs: Instance.new, workspace, Vector3, CFrame, Color3, Enum.Material, Parent, basic properties. Create real parts and parent them to workspace. Avoid unsupported networking, DataStore persistence, external modules, long-running loops and task.wait loops. Never delete the existing project unless explicitly requested. If no code is needed, return an empty luau string. The apply field is true only when the user explicitly asks to modify the project. Do not execute code. Return JSON matching the schema with message, luau and apply.';
+ const system='You are the embedded Roblox Studio engineering assistant inside Octane Studio Mobile. The user speaks Arabic Iraqi; reply in the user language. You receive a JSON project snapshot and a screenshot of the current 3D viewport. Inspect both before responding. If the user requests a scene build or a script, return a self-contained Luau script in the luau field using supported preview APIs: Instance.new, workspace, Vector3, CFrame, Color3, Enum.Material, Parent, basic properties. Create real parts and parent them to workspace. Avoid unsupported networking, DataStore persistence, external modules, long-running loops and task.wait loops. Never delete the existing project unless explicitly requested. If no code is needed, return an empty luau string. The apply field is true only when the user explicitly asks to modify the project. Do not execute code. Return JSON matching the schema with message, luau and apply.';
  const hist=geminiHistory.slice(-8).map(x=>(x.role==='user'?'User: ':'Assistant: ')+x.text).join('\n');
  const payload=system+'\n\nConversation:\n'+hist+'\n\nCurrent user request:\n'+prompt;
  const context=geminiContextSnapshot(),image=captureGeminiViewport(),id='gemini-'+Date.now()+'-'+Math.random().toString(36).slice(2,7);geminiRequestId=id;
@@ -731,14 +731,14 @@ $('geminiClearKey').onclick=()=>{try{AndroidBridge.clearGeminiApiKey();$('gemini
 $('geminiApplyCode').onclick=()=>applyGeminiCode(false);$('geminiRunCode').onclick=()=>applyGeminiCode(true);
 window.StudioMobile=window.StudioMobile||{};window.StudioMobile.onGeminiResult=onGeminiResult;
 
-let saved=safeStorageGet('studioMobileProject');if(saved){try{let p=JSON.parse(saved);if(Array.isArray(p.root))project=normalizeProject(p);}catch{}}
+let saved=safeStorageGet('octaneStudioMobileProject');if(saved){try{let p=JSON.parse(saved);if(Array.isArray(p.root))project=normalizeProject(p);}catch{}}
 const starterWorkspace=project.root.find(n=>n.className==='Workspace');
 if(starterWorkspace){
  let migrated=false;const has=n=>starterWorkspace.children.some(x=>x.className===n||x.name===n);
  if(!has('Baseplate')){starterWorkspace.children.unshift({id:'baseplate',name:'Baseplate',className:'Part',position:{x:0,y:-.5,z:0},size:{x:128,y:1,z:128},color:'#477A50',anchored:true,canCollide:true,transparency:0,material:'Grass',children:[]});migrated=true;}
  if(!has('SpawnLocation')){starterWorkspace.children.push({id:'spawn',name:'SpawnLocation',className:'SpawnLocation',position:{x:0,y:.5,z:18},size:{x:6,y:1,z:6},color:'#36C98A',anchored:true,canCollide:true,transparency:0,children:[]});migrated=true;}
  if(!has('StarterBuilding')){starterWorkspace.children.push(makeStarterBuilding());migrated=true;}
- if(migrated){project.version=4;safeStorageSet('studioMobileProject',JSON.stringify(project));}
+ if(migrated){project.version=4;safeStorageSet('octaneStudioMobileProject',JSON.stringify(project));}
 }
 render();switchView('scene');selectRibbon('home');setActiveTool('select',true);setTimeout(initViewport,80);
 })();
