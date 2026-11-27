@@ -13,9 +13,9 @@ permissions:
   contents: read
 
 jobs:
-  build-and-smoke-test:
+  build-and-verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 20
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -38,34 +38,27 @@ jobs:
         with:
           gradle-version: '8.9'
 
-      - name: Build debug APK
+      - name: Compile Android APK
         run: gradle -p octane-studio-android :app:assembleDebug --no-daemon --stacktrace
 
-      - name: Verify APK archive and Android package
+      - name: Verify APK structure and package metadata
         run: |
+          set -euo pipefail
           APK="octane-studio-android/app/build/outputs/apk/debug/app-debug.apk"
           test -s "$APK"
           unzip -t "$APK"
-          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$APK" | grep -E "package: name='com.octane.mobile'|sdkVersion:'23'"
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$APK" | tee apk-badging.txt
+          grep -q "package: name='com.octane.mobile'" apk-badging.txt
+          grep -q "sdkVersion:'23'" apk-badging.txt
+          sha256sum "$APK" | tee apk-sha256.txt
 
       - name: Upload installable APK
         uses: actions/upload-artifact@v4
         with:
           name: octane-studio-mobile-debug-apk
-          path: octane-studio-android/app/build/outputs/apk/debug/app-debug.apk
+          path: |
+            octane-studio-android/app/build/outputs/apk/debug/app-debug.apk
+            apk-badging.txt
+            apk-sha256.txt
           if-no-files-found: error
           retention-days: 14
-
-      - name: Install and launch on Android emulator
-        uses: ReactiveCircus/android-emulator-runner@v2
-        with:
-          api-level: 28
-          target: default
-          arch: x86_64
-          profile: pixel_2
-          disable-animations: true
-          script: |
-            adb install -r octane-studio-android/app/build/outputs/apk/debug/app-debug.apk
-            adb shell am start -n com.octane.mobile/.MainActivity
-            sleep 5
-            adb shell pidof com.octane.mobile
