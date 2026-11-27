@@ -15,7 +15,7 @@ permissions:
 jobs:
   build-and-smoke-test:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 25
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -28,10 +28,10 @@ jobs:
 
       - name: Install Android SDK packages
         run: |
-          echo "ANDROID_HOME=$ANDROID_HOME"
-          test -x "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" || true
-          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --sdk_root="$ANDROID_HOME" --licenses >/dev/null || true
-          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --sdk_root="$ANDROID_HOME" "platforms;android-35" "build-tools;35.0.0"
+          SDKMANAGER="$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager | sort -V | tail -n 1)"
+          test -n "$SDKMANAGER"
+          yes | "$SDKMANAGER" --sdk_root="$ANDROID_HOME" --licenses >/dev/null || true
+          "$SDKMANAGER" --sdk_root="$ANDROID_HOME" "platforms;android-35" "build-tools;35.0.0"
 
       - name: Set up Gradle 8.9
         uses: gradle/actions/setup-gradle@v4
@@ -51,14 +51,15 @@ jobs:
       - name: Install and launch on Android emulator
         uses: ReactiveCircus/android-emulator-runner@v2
         with:
-          api-level: 35
-          target: google_apis
+          api-level: 28
+          target: default
           arch: x86_64
           profile: pixel_2
+          disable-animations: true
           script: |
             adb install -r octane-studio-android/app/build/outputs/apk/debug/app-debug.apk
             adb shell am start -n com.octane.mobile/.MainActivity
-            sleep 8
+            sleep 5
             adb shell pidof com.octane.mobile
 
       - name: Upload installable APK
